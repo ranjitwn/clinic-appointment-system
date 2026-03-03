@@ -1,0 +1,266 @@
+/* Header */
+header {
+  background: #0ea5a4;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Footer */
+footer {
+  background: #f0f9f9;
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #d1e5e5;
+}
+
+/* Card Style */
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #e6f2f2;
+  width: 100%;
+  max-width: 900px;
+  margin: 1.5rem auto;
+  transition: transform 0.2s ease;
+}
+
+.card h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;        
+  margin-top: 15px;
+}
+
+.card form,
+.card .form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card input,
+.card select {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #d1e5e5;
+}
+
+.card label,
+.card small {
+  margin-bottom: 6px;
+}
+
+/* Buttons */
+button {
+  background: #0ea5a4;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0c8b8a;
+}
+
+.cancel-btn {
+  background-color: #dc2626;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #b91c1c;
+}
+
+/* Auth Pages */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.auth-card button {
+  width: 100%;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #d1e5e5;
+}
+
+/* Doctor Search */
+.search-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-form input {
+  flex: 1;
+}
+
+small {
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Popup Toast */
+.popup {
+  position: fixed;
+  top: 80px;
+  right: 40px;
+  min-width: 280px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  z-index: 9999;
+  animation: slideIn 0.25s ease;
+  pointer-events: auto;
+  transform: translateZ(0); 
+}
+
+
+.popup.success {
+  background: #0ea5a4;
+}
+
+.popup.error {
+  background: #ef4444;
+}
+
+.popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.popup-text {
+  flex: 1;
+  padding-right: 12px;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.popup-btn {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.popup-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.popup-btn.secondary {
+  background: transparent;
+}
+
+.no-appointments {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+

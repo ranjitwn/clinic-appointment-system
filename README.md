@@ -1,0 +1,380 @@
+# Clinic Appointment Booking System — Exam Project 2
+
+This project is a **full-stack clinic appointment booking system**  Exam Project 2**.
+
+The solution consists of two main applications:
+
+* **Backend:** ASP.NET Core (.NET 9) REST API using Entity Framework Core and MySQL
+* **Frontend:** React + TypeScript + Vite application
+
+The system supports clinic appointment booking, patient authentication, guest booking, doctor search, appointment management, and admin configuration features.
+
+---
+
+## Project Structure (Root)
+
+```
+Root/
+│
+├── Backend/
+│   └── ExamProject2.API/
+│       └── README.md
+│
+├── Frontend/
+│   └── README.md
+│
+└── mar25ft-ep2-ranjitwn.sln
+```
+
+Detailed technical documentation is available in:
+
+* `Backend/README.md` → Backend API documentation
+* `Frontend/README.md` → Frontend application documentation
+
+---
+
+## Technologies Used
+
+### Backend
+
+* ASP.NET Core (.NET 9)
+* Entity Framework Core (Code‑First)
+* MySQL Database
+* JWT Authentication
+* Swagger API Documentation
+* Global Exception Middleware
+* Role‑based Authorization
+
+### Frontend
+
+* React 18
+* TypeScript
+* Vite
+* React Router DOM
+* Fetch API for backend communication
+* ESLint (strict TypeScript configuration)
+* @vitejs/plugin-react (Fast Refresh + JSX support)
+
+---
+
+## Running the Project (Quick Start)
+
+### 1. Start Backend
+
+From the root folder:
+
+```
+cd Backend/ExamProject2.API
+dotnet restore
+dotnet ef database update
+dotnet run
+```
+
+Backend runs on:
+
+```
+http://localhost:5108
+```
+
+Swagger API documentation is accessible at:
+
+```
+http://localhost:5108/doc
+```
+
+---
+
+### 2. Start Frontend
+
+Open a new terminal:
+
+```
+cd Frontend
+npm install
+npm run dev
+```
+
+Frontend runs on:
+
+```
+http://localhost:5173
+```
+
+---
+
+## ENDPOINTS
+
+The backend exposes REST endpoints grouped by controller.  
+Access varies depending on authentication and role.
+
+---
+
+### Authentication (Guest / Public)
+
+- POST `/api/Auth/register` → Register patient account  
+- POST `/api/Auth/login` → Login and receive JWT token  
+
+---
+
+### Appointments
+
+#### Guest + Registered Patient
+
+- POST `/api/Appointment` → Create appointment (guest or logged-in patient)  
+- GET `/api/Appointment/available-slots` → Get available time slots  
+
+#### Registered Patient Only (JWT Required)
+
+- GET `/api/Appointment/my` → View own appointments  
+- PUT `/api/Appointment/{id}` → Update own appointment  
+- DELETE `/api/Appointment/{id}` → Cancel own appointment  
+
+#### Admin Only
+
+- GET `/api/Appointment/clinic/{clinicId}` → All appointments for clinic  
+- GET `/api/Appointment/doctor/{doctorId}` → All appointments for doctor  
+
+---
+
+### Doctors
+
+#### Public / Guest Access
+
+- GET `/api/Doctor` → List doctors  
+- GET `/api/Doctor/{id}` → Doctor details  
+- GET `/api/Doctor/search` → Search doctors  
+- GET `/api/Doctor/by-clinic/{clinicId}` → Filter by clinic  
+- GET `/api/Doctor/by-speciality/{specialityId}` → Filter by speciality  
+
+#### Admin Only
+
+- POST `/api/Doctor` → Create doctor  
+- PUT `/api/Doctor/{id}` → Update doctor  
+- DELETE `/api/Doctor/{id}` → Delete doctor  
+
+---
+
+### Clinics
+
+#### Public Access
+
+- GET `/api/Clinic` → List clinics  
+- GET `/api/Clinic/{id}` → Clinic details  
+
+#### Admin Only
+
+- POST `/api/Clinic` → Create clinic  
+- PUT `/api/Clinic/{id}` → Update clinic  
+- DELETE `/api/Clinic/{id}` → Delete clinic  
+
+---
+
+### Categories
+
+#### Public Access
+
+- GET `/api/Category` → List categories  
+- GET `/api/Category/{id}` → Category details  
+
+#### Admin Only
+
+- POST `/api/Category` → Create category  
+- PUT `/api/Category/{id}` → Update category  
+- DELETE `/api/Category/{id}` → Delete category  
+
+---
+
+### Specialities
+
+#### Public Access
+
+- GET `/api/Speciality` → List specialities  
+- GET `/api/Speciality/{id}` → Speciality details  
+
+#### Admin Only
+
+- POST `/api/Speciality` → Create speciality  
+- PUT `/api/Speciality/{id}` → Update speciality  
+- DELETE `/api/Speciality/{id}` → Delete speciality  
+
+---
+
+### Patients (Admin Only)
+
+- GET `/api/Patient` → List patients  
+- GET `/api/Patient/{id}` → Patient details  
+- POST `/api/Patient` → Create patient  
+- PUT `/api/Patient/{id}` → Update patient  
+- DELETE `/api/Patient/{id}` → Delete patient  
+
+---
+
+For detailed endpoint documentation, request/response examples, and validation rules, refer to:
+
+**Backend/README.md**
+---
+
+## Guest vs Registered Patient Flow
+
+### Guest Patients
+
+* Can book appointments without login
+* Must provide personal details during booking
+* Cannot manage appointments unless they later register
+
+If a guest registers using the same email address:
+
+* Their guest record is upgraded to a registered patient
+* Previously created appointments become accessible
+
+### Registered Patients
+
+* Can register and login
+* JWT authentication is used
+* Can view, update, and cancel their appointments
+
+---
+
+## Admin Role Implementation
+
+This project does not use a separate Admin entity.
+
+Instead:
+
+* Admin users are stored in the Patients table
+* Role‑based authorization determines access:
+
+```
+Role = "Admin"
+IsRegistered = true
+```
+
+Admin capabilities include:
+
+* Managing clinics
+* Managing doctors
+* Managing categories and specialities
+* Viewing appointment data
+
+This design simplifies authentication while maintaining secure role‑based access control.
+
+---
+
+## Security Considerations
+
+### Database & Admin Setup Note
+
+The database is created using **Entity Framework Core Code-First migrations**, as required in the exam brief.
+
+A default **Admin account is seeded automatically** to allow immediate testing without manual database setup.
+
+Some configuration values (such as database connection, JWT key, and admin seed credentials) are stored in `appsettings.json` for development and exam demonstration purposes only.
+
+In real production environments, these should be managed securely using environment variables or a secret manager.
+
+### Development Configuration
+
+The following configuration values are stored locally for development and exam purposes:
+
+* Database connection string
+* JWT secret key
+* Admin seed credentials
+
+### Production Recommendation
+
+In real deployments these should be stored securely using:
+
+* Environment variables
+* Secret managers
+* Secure configuration providers
+
+Additional recommended practices:
+
+* Always use HTTPS
+* Avoid committing secrets to version control
+* Apply proper authentication and authorization policies
+
+---
+
+## Patient Data Privacy Note
+
+The exam brief references extended patient personal data fields.
+This implementation intentionally stores only essential booking data:
+
+* First name
+* Last name
+* Email
+* Date of birth
+* Gender
+
+Sensitive identifiers such as:
+
+* SSN
+* Tax numbers
+* Religion
+* Driver’s license numbers
+* Medical insurance membership numbers
+
+were intentionally excluded due to privacy and security considerations.
+
+This decision follows GDPR data-minimisation principles and information security best practices, 
+ensuring that only necessary Personally Identifiable Information (PII) is stored while still meeting functional booking requirements.
+
+---
+
+## CORS Configuration
+
+Backend CORS is configured to allow the frontend development server:
+
+```
+http://localhost:5173
+```
+
+Reference documentation:
+
+Microsoft ASP.NET Core Security Documentation
+[https://learn.microsoft.com/en-us/aspnet/core/security/cors](https://learn.microsoft.com/en-us/aspnet/core/security/cors)
+
+---
+
+## Additional Features Beyond Minimum Requirements
+
+The project includes several enhancements:
+
+* Role‑based admin management
+* Appointment slot validation rules
+* Doctor filtering and search functionality
+* Admin appointment overview endpoints
+* Global exception middleware for consistent JSON responses
+
+These improvements enhance usability while remaining aligned with exam requirements.
+
+---
+
+## REFERENCES
+
+Documentation used during development:
+
+* Microsoft ASP.NET Core Documentation
+* Microsoft Entity Framework Core Documentation
+* Microsoft CORS Documentation
+* Noroff course materials and lessons.
+* AI tools (ChatGPT) were used for brainstorming during the project.
+
+---
+
+## Final Summary
+
+This project delivers:
+
+* Full‑stack clinic appointment booking system
+* JWT authentication with role handling
+* Guest and registered patient workflows
+* Appointment scheduling validation
+* Admin management functionality
+* Secure backend API
+* Modern React frontend
+
+
+
+---
