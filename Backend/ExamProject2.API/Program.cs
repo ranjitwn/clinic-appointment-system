@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // React Vite default
+            policy.WithOrigins("http://localhost:5173", "https://gray-desert-07ba2b303.1.azurestaticapps.net") // React Vite default and Azure Static Web Apps URL
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
