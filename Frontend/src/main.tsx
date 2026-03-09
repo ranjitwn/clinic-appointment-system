@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
-import "./app.css";
+import "./App.css";
 import { AuthProvider } from "./context/AuthProvider";
 
 
