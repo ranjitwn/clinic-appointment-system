@@ -366,6 +366,28 @@ Future updates may include additional features, improvements to the user experie
 
 ---
 
+## System Architecture
+
+The application follows a layered architecture separating the client, application logic, and data storage.
+
+The architecture is composed of three main layers:
+
+• **Client Layer** – User interacts with the system through a web browser that loads the React frontend.  
+• **Application Layer** – The React frontend communicates with the ASP.NET Core Web API using HTTPS REST requests.  
+• **Data Layer** – The backend API accesses the MySQL database using Entity Framework Core with Code-First migrations.
+
+Authentication is handled using **JWT tokens**, and communication between frontend and backend uses **JSON over HTTPS**.
+
+This architecture promotes clear separation of concerns between the frontend user interface, backend business logic, and persistent data storage.
+
+### Architecture Diagram
+
+The following diagram illustrates the overall system architecture and interaction between components.
+
+![System Architecture](docs/architecture-diagram.png)
+
+---
+
 # Deployment Architecture
 
 This project is deployed using a cloud architecture on Microsoft Azure, with automated deployments through GitHub Actions CI/CD.
