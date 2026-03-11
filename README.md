@@ -1,6 +1,8 @@
-# Clinic Appointment Booking System — Exam Project 2
+# Clinic Appointment Booking System
 
-This project is a **full-stack clinic appointment booking system**  Exam Project 2**.
+A full-stack clinic appointment booking platform built with ASP.NET Core Web API and React, deployed on Microsoft Azure with CI/CD using GitHub Actions.
+
+The project was originally developed as part of a backend development course and later extended, deployed to the cloud, and maintained as a production-style portfolio project.
 
 The solution consists of two main applications:
 
@@ -9,7 +11,14 @@ The solution consists of two main applications:
 
 The system supports clinic appointment booking, patient authentication, guest booking, doctor search, appointment management, and admin configuration features.
 
----
+# Live Application
+
+The application is deployed to Microsoft Azure and accessible through custom domains.
+
+Frontend: https://app.ranjitnair.dev  
+Backend API: https://api.ranjitnair.dev  
+Swagger API Documentation: https://api.ranjitnair.dev/doc
+
 
 ## Project Structure (Root)
 
@@ -337,19 +346,175 @@ Microsoft ASP.NET Core Security Documentation
 
 ---
 
-## Additional Features Beyond Minimum Requirements
+## Additional Features Beyond Original Requirements
 
-The project includes several enhancements:
+This project was originally developed as part of a backend development exam assignment.  
+After completing the required functionality, additional improvements and features were implemented to extend the system and demonstrate real-world development practices.
 
-* Role‑based admin management
+These enhancements include:
+
+* Role-based admin management
 * Appointment slot validation rules
 * Doctor filtering and search functionality
 * Admin appointment overview endpoints
 * Global exception middleware for consistent JSON responses
+* Cloud deployment using Azure
+* CI/CD deployment using GitHub Actions
 
-These improvements enhance usability while remaining aligned with exam requirements.
+This project is continuously being improved as a portfolio project. 
+Future updates may include additional features, improvements to the user experience, and further CI/CD enhancements.
 
 ---
+
+# Deployment Architecture
+
+This project is deployed using a cloud architecture on Microsoft Azure, with automated deployments through GitHub Actions CI/CD.
+
+The system consists of:
+
+• Frontend – React + TypeScript + Vite hosted on Azure Static Web Apps  
+• Backend API – ASP.NET Core Web API (.NET 9) hosted on Azure App Service  
+• Database – Azure Database for MySQL  
+• DNS & Domains – Namecheap DNS with custom domain configuration  
+• CI/CD – GitHub Actions pipeline for automated build and deployment
+
+---
+
+# Deployment Diagram
+
+A deployment architecture diagram describing the cloud infrastructure is included below.
+
+docs/deployment-diagram.png
+
+
+![Deployment Architecture](docs/deployment-diagram.png)
+
+---
+
+# Deployment Flow
+
+1. Code is pushed to the GitHub repository.
+2. GitHub Actions CI/CD pipeline is triggered automatically.
+3. The pipeline builds both the backend and frontend applications.
+4. Backend is deployed to Azure App Service.
+5. Frontend is deployed to Azure Static Web Apps.
+6. The frontend communicates with the backend through a REST API over HTTPS.
+7. The backend accesses the Azure MySQL database using Entity Framework Core.
+
+---
+
+# Cloud Infrastructure
+
+The system is deployed in Microsoft Azure – West Europe region.
+
+### Frontend
+
+Service:
+
+
+Azure Static Web Apps
+
+
+Technology:
+
+
+React + TypeScript + Vite
+
+
+Domain:
+
+
+app.ranjitnair.dev
+
+
+---
+
+### Backend API
+
+Service:
+
+
+Azure App Service
+
+
+Technology:
+
+
+ASP.NET Core Web API (.NET 9)
+
+
+Domain:
+
+
+api.ranjitnair.dev
+
+
+Swagger documentation:
+
+
+/doc
+
+
+CORS allows requests from:
+
+
+app.ranjitnair.dev
+
+
+---
+
+### Database
+
+Service:
+
+
+Azure Database for MySQL
+
+
+Region:
+
+
+West Europe
+
+
+Schema management:
+
+
+Entity Framework Core Code-First migrations
+
+
+---
+
+# DNS Configuration
+
+Custom domains are configured using Namecheap DNS.
+
+DNS records include:
+
+
+CNAME app -> Azure Static Web Apps
+CNAME api -> Azure App Service
+TXT asuid.api -> Azure domain verification
+
+
+Azure automatically provisions HTTPS certificates for the custom domains.
+
+---
+
+# CI/CD Pipeline
+
+Continuous deployment is configured using GitHub Actions.
+
+The pipeline performs:
+
+
+Build ASP.NET Core backend
+Deploy backend to Azure App Service
+Build React frontend
+Deploy frontend to Azure Static Web Apps
+
+
+Deployment is triggered when changes are pushed to the repository.
 
 ## REFERENCES
 
