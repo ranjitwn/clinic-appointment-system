@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using ExamProject2.API.Services;
 using ExamProject2.API.Middleware;
+using Microsoft.AspNetCore.HttpOverrides;
 
 
 
@@ -122,6 +123,14 @@ builder.Services.AddScoped<SpecialityService>();
 
 
 var app = builder.Build();
+
+var forwardOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                       ForwardedHeaders.XForwardedProto
+};
+
+app.UseForwardedHeaders(forwardOptions);
 
 // Seed Admin User 
 using (var scope = app.Services.CreateScope())
