@@ -554,13 +554,15 @@ Documentation used during development:
 
 This project delivers:
 
-* Full‑stack clinic appointment booking system
-* JWT authentication with role handling
+* Full-stack clinic appointment booking system
+* JWT authentication with role-based access control
 * Guest and registered patient workflows
 * Appointment scheduling validation
 * Admin management functionality
-* Secure backend API
-* Modern React frontend
+* Secure ASP.NET Core backend API
+* Modern React + TypeScript frontend
+* Cloud deployment on Microsoft Azure
+* CI/CD pipeline using GitHub Actions
 
 
 
