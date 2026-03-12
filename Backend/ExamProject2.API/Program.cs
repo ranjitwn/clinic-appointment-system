@@ -9,6 +9,7 @@ using System.Reflection;
 using ExamProject2.API.Services;
 using ExamProject2.API.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 
 
@@ -36,6 +37,12 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddHealthChecks()
+    .AddMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        name: "mysql",
+        timeout: TimeSpan.FromSeconds(5));
+
 
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(options =>
@@ -43,7 +50,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "ExamProject2 API",
+        Title = "Clinic Appointment Booking API",
         Description = "API for managing clinics, doctors, patients, and appointments."
     });
 
@@ -198,6 +205,11 @@ app.MapGet("/", () =>
         status = "Running",
         timestamp = DateTime.UtcNow
     });
-});
+})
+.WithTags("System")
+.WithSummary("API service information")
+.WithDescription("Returns basic information about the Clinic Appointment Booking API service.");
+
+app.MapHealthChecks("/health");
 
 app.Run();
