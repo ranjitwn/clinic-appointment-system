@@ -17,8 +17,23 @@ The application is deployed to Microsoft Azure and accessible through custom dom
 
 Frontend: https://app.ranjitnair.dev  
 Backend API: https://api.ranjitnair.dev  
+Health check: https://api.ranjitnair.dev/health
 Swagger API Documentation: https://api.ranjitnair.dev/doc
 
+----
+## System Endpoints
+
+The backend API also exposes system endpoints used for service information and monitoring.
+
+| Endpoint | Description |
+|--------|-------------|
+| https://api.ranjitnair.dev | API service information |
+| https://api.ranjitnair.dev/health | Health check used by monitoring systems |
+| https://api.ranjitnair.dev/doc | Swagger API documentation |
+
+These endpoints help verify that the backend service is running and provide quick access to the API documentation.
+
+---
 
 ## Project Structure (Root)
 
@@ -405,9 +420,6 @@ The system consists of:
 # Deployment Diagram
 
 A deployment architecture diagram describing the cloud infrastructure is included below.
-
-docs/deployment-diagram.png
-
 
 ![Deployment Architecture](docs/deployment-diagram.png)
 

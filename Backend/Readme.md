@@ -448,6 +448,60 @@ These enhance usability while maintaining required functionality.
 
 ---
 
+## System Endpoints
+
+The API exposes additional system endpoints used for service information and monitoring.
+
+### API Root Endpoint
+
+Provides basic information about the running API service.
+
+GET /
+https://api.ranjitnair.dev
+
+Example response:
+
+{
+  "name": "Clinic Appointment Booking API",
+  "version": "1.0",
+  "environment": "Production",
+  "documentation": "https://api.ranjitnair.dev/doc",
+  "repository": "https://github.com/ranjitwn/clinic-appointment-system",
+  "status": "Running",
+  "timestamp": "UTC timestamp"
+}
+
+This endpoint allows users and developers to quickly verify that the API is running and access the documentation.
+
+---
+
+### Health Check Endpoint
+
+Used by monitoring systems and cloud infrastructure to verify that the API service is operational.
+
+GET /health
+https://api.ranjitnair.dev/health
+
+Example response:
+
+Healthy
+
+This endpoint verifies that the API service is running and that critical dependencies such as the database are reachable.
+
+---
+
+## System Monitoring
+
+The backend API also provides system monitoring endpoints.
+
+API Root:
+https://api.ranjitnair.dev
+
+Health Check:
+https://api.ranjitnair.dev/health
+
+---
+
 ## 17. Summary
 
 This backend includes:
