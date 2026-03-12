@@ -1,32 +1,82 @@
-# ExamProject2.API – Clinic Appointment Backend (.NET 9)
+# Clinic Appointment Backend API
 
-This project is a REST API built with **ASP.NET Core (.NET 9)** and **Entity Framework Core** using **MySQL** as the database.
-It supports clinic appointment booking with patient authentication, guest booking, admin management, and JWT security.
+Backend REST API for the **Clinic Appointment Booking System**, built with **ASP.NET Core (.NET 9)** and **Entity Framework Core** using **MySQL** as the database.
+
+The API manages appointment scheduling, patient authentication, clinic administration, and doctor management while enforcing scheduling validation rules and secure role-based access control.
 
 ---
 
-## 1. Application Setup Instructions
+# API Documentation
 
-1. Clone or download the project.
-2. Open the solution in **Visual Studio Code**.
-3. Ensure the **.NET 9 SDK** is installed.
-4. Navigate to the backend project folder:
+Swagger API documentation is available when the API is running:
 
-```bash
-cd Backend
-cd ExamProject2.API
+```
+http://localhost:5108/doc
 ```
 
-5. Run the application:
+Live production API documentation:
+
+```
+https://api.ranjitnair.dev/doc
+```
+
+---
+
+# Technology Stack
+
+### Backend Framework
+
+* ASP.NET Core (.NET 9)
+* Entity Framework Core (Code-First)
+* MySQL database
+
+### Security
+
+* JWT Authentication
+* Role-based authorization
+* Password hashing
+
+### API Infrastructure
+
+* Swagger / OpenAPI documentation
+* Global exception handling middleware
+* DTO-based API contracts
+
+---
+
+# Running the API Locally
+
+Navigate to the backend project:
+
+```bash
+cd Backend/ExamProject2.API
+```
+
+Restore dependencies:
+
+```bash
+dotnet restore
+```
+
+Apply database migrations:
+
+```bash
+dotnet ef database update
+```
+
+Run the application:
 
 ```bash
 dotnet run
 ```
 
-6. The API URL will appear in the terminal
-   (example: `http://localhost:5108`).
+The API will start on:
 
-7. Swagger UI can be accessed at:
+```
+http://localhost:5108
+```
+
+Swagger documentation:
 
 ```
 http://localhost:5108/doc
@@ -34,490 +84,232 @@ http://localhost:5108/doc
 
 ---
 
-## 2. Instructions to Run the Application
+# Configuration
 
-1. Ensure **MySQL Server** is installed.
-2. Create the database:
+Sensitive configuration values are managed through **environment variables**.
 
-```sql
-CREATE DATABASE examproject2db;
+Examples include:
+
+* Database connection string
+* JWT signing key
+* Admin seed credentials
+
+In production these values are stored securely in **Azure App Service configuration**.
+
+Example configuration keys:
+
+```
+JwtSettings__SecretKey
+JwtSettings__Issuer
+JwtSettings__Audience
+JwtSettings__ExpiryMinutes
+SeedAdmin__Email
+SeedAdmin__Password
 ```
 
-3. Update the connection string inside **appsettings.json** with your MySQL username and password.  
-4. Apply database migrations (see section 3).
-5. Start the API:
-
-```bash
-dotnet run
-```
+This prevents secrets from being stored inside the repository.
 
 ---
 
-## 3. Instructions to Create Needed Migrations
+# Project Architecture
 
-Inside the **ExamProject2.API** folder:
-
-### Apply migration
-
-```bash
-dotnet ef database update
-```
-
-This will:
-
-* Apply all existing EF Core migrations in the project
-
-* Create the database schema (tables, keys, relationships)
-
-* Reflect any incremental schema changes created during development
-
-Note:
-Role-based authorization is implemented to restrict administrative CRUD operations.
----
-
-## 4. Connection String Format (MySQL)
-
-Inside **appsettings.json**:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "server=localhost;database=examproject2db;user=YOUR_USERNAME;password=YOUR_PASSWORD"
-}
-```
-
-Replace:
-
-* `YOUR_USERNAME`
-* `YOUR_PASSWORD`
-
-with your MySQL credentials.
-
----
-
-## 5. External Packages Used
-
-| Package                                       | Purpose                    |
-| --------------------------------------------- | -------------------------- |
-| MySql.EntityFrameworkCore                     | EF Core provider for MySQL |
-| Microsoft.EntityFrameworkCore.Design          | EF Core migrations         |
-| Swashbuckle.AspNetCore                        | Swagger documentation      |
-| Microsoft.AspNetCore.Authentication.JwtBearer | JWT Authentication         |
-| System.IdentityModel.Tokens.Jwt               | Token creation/validation  |
-
----
-
-## 6. Project Structure
+The backend follows a layered architecture separating controllers, business logic, and data access.
 
 ```
-ExamProject2.API/
+ExamProject2.API
 │
-├── Controllers/
-│   ├── AppointmentController.cs
-│   ├── AuthController.cs
-│   ├── CategoryController.cs
-│   ├── ClinicController.cs
-│   ├── DoctorController.cs
-│   ├── PatientController.cs
-│   └── SpecialityController.cs
-│
-├── Data/
-│   └── DataContext.cs
-│
-├── Models/
-│   ├── Appointment.cs
-│   ├── Category.cs
-│   ├── Clinic.cs
-│   ├── Doctor.cs
-│   ├── Patient.cs
-│   ├── Speciality.cs
-│   └── JwtSettings.cs
-│
-├── DTOs/
-│   ├── AppointmentCreateDto.cs
-│   ├── AppointmentUpdateDto.cs
-│   ├── CategoryCreateDto.cs
-│   ├── ClinicCreateDto.cs
-│   ├── DoctorCreateDto.cs
-│   ├── DoctorSearchDto.cs
-│   ├── PatientCreateDto.cs
-│   ├── PatientLoginDto.cs
-│   ├── PatientRegisterDto.cs
-│   ├── AuthLoginResultDto.cs
-│   └── SpecialityCreateDto.cs
-│
-├── Services/
-│   ├── AppointmentService.cs
-│   ├── AuthService.cs
-│   ├── CategoryService.cs
-│   ├── ClinicService.cs
-│   ├── DoctorService.cs
-│   ├── PatientService.cs
-│   └── SpecialityService.cs
-│
-├── Middleware/
-│   └── GlobalExceptionMiddleware.cs
-│
-├── Migrations/
-├── appsettings.json
-├── Program.cs
-└── README.md
+├── Controllers
+├── Services
+├── DTOs
+├── Models
+├── Data
+├── Middleware
+└── Migrations
 ```
 
+### Controllers
+
+Handle HTTP requests and responses.
+
+### Services
+
+Contain business logic and application rules.
+
+### DTOs
+
+Define structured request and response contracts.
+
+### Models
+
+Entity models mapped to database tables using EF Core.
+
+### DataContext
+
+Entity Framework database context responsible for database access.
+
+### Middleware
+
+Centralized error handling using `GlobalExceptionMiddleware`.
+
 ---
 
-## 7. Authentication & Authorization
+# Authentication & Authorization
 
-### JWT Authentication
+Authentication is implemented using **JWT tokens**.
 
-* Registered patients can login.
-* Guests can book appointments without login.
-* JWT token includes:
+Registered patients can log in and receive a token containing:
 
-  * PatientId
-  * Email
-  * Role claim.
+* Patient ID
+* Email
+* Role claim
 
-The login endpoint returns authentication data using a dedicated DTO 
-(AuthLoginResultDto), providing the JWT token and role in a structured 
-JSON response format.
-
-**Note:** Role claim was added to support basic authorization (Admin vs Patient), improving API security.
----
-
-### Roles
-
-Roles implemented:
-
-* Patient – default role for registered users
-
-* Admin – management role for system configuration
-
-Admin-only actions include:
-
-* Creating, updating, and deleting clinics
-
-* Creating, updating, and deleting doctors
-
-* Creating, updating, and deleting Categories
-
-* Creating, updating, and deleting specialities
-
-Example authorization usage:
+Example authorization attribute:
 
 ```csharp
 [Authorize(Roles = "Admin")]
 ```
 
-Note: 
-Role-based authorization was added as an enhancement.
-This ensures that sensitive management actions (such as creating or modifying clinics, doctors, categories, and specialities) are restricted to authorized Admin users only, while regular patients can only access their own relevant functionality.
-
-This improvement does not change any required project functionality and added as a security best practice.
----
-
-## 8. Global Exception Middleware
-
-A custom `GlobalExceptionMiddleware` is included to provide:
-
-* Consistent JSON error responses
-* Centralized exception handling
-* Cleaner controller logic
-* Improved debugging
-
-Reference documentation used:
-
-* Microsoft ASP.NET Core middleware documentation
-* ASP.NET Core official exception handling guidance
-
-This follows backend course principles for structured API error handling.
-
----
-
-## 9. Appointment Booking Logic
-
-The system prevents invalid bookings:
-
-### Slot Conflict Validation
-
-Prevents:
-
-* Same doctor overlapping bookings
-* Same clinic conflicts
-* Overlapping appointment time
-
----
-
-### Patient Conflict Validation
-
-* Prevents a patient from booking multiple overlapping appointments.
-
----
-
-### Additional Appointment Validation Rules
-
-The system also enforces:
-
-* No past appointments
-* No weekend bookings (Saturday/Sunday)
-* Clinic hours: **08:00–18:00**
-* Appointment must finish before closing time
-* Allowed durations:
-
-  * 15 minutes
-  * 30 minutes
-  * 45 minutes
-  * 60 minutes
-* Time intervals must align to:
-
-  * :00, :15, :30, :45
-
-These ensure realistic scheduling.
-
-### Available Slots Note
-
-An endpoint is provided to generate available appointment time slots based on:
-
-- Clinic working hours (08:00–18:00)
-- Existing booked appointments
-- Selected appointment duration
-
-Duration validation is enforced during appointment creation and update.
-The available slots endpoint assumes valid duration input and serves as a helper for frontend scheduling.
-
-This approach keeps business validation centralized while still providing usable scheduling guidance.
-
-
-## 10. Data Validation
-
-DTO validation is implemented using DataAnnotations:
-
-Examples:
-
-* Required fields
-* Email format validation
-* Duration must be greater than zero
-* Server-side control of registration status.
-
----
-
-## 11. Service Layer Architecture
-
-Business logic is implemented inside the **Services folder**:
-
-Benefits:
-
-* Cleaner controllers
-* Better separation of concerns
-* Easier future maintenance
-* Industry-aligned structure.
-
-Controllers now:
-
-* Handle HTTP requests
-* Call services
-* Return responses.
-
-## 11.1 Response Handling Approach
-Business logic is handled in the service layer.
-Most services return DTOs or boolean results.
-Some endpoints (such as appointment creation and update) return validation messages as strings to provide clearer API feedback while keeping business logic inside the service layer.
-All responses are returned as JSON objects from controllers to maintain consistent API behaviour.
-
-* Consistent JSON response handling across all endpoints
-
----
-
-## 12. CORS Configuration
-
-CORS enabled for frontend communication during development:
-
-Example allowed origin:
+Roles implemented:
 
 ```
-http://localhost:5173
+Patient
+Admin
 ```
 
-This allows integration with the React frontend during development.
-
-Configuration reference:
-
-**Microsoft ASP.NET Core Security Documentation**
-- Microsoft ASP.NET Core Security
-https://learn.microsoft.com/en-us/aspnet/core/security/cors
-
+Admin users have permissions to manage clinics, doctors, categories, and specialities.
 
 ---
 
-## 13. Admin User Seeding
+# Appointment Booking Logic
 
-An Admin user is automatically created during application startup if none exists.
+The system enforces multiple validation rules to ensure realistic scheduling.
 
-Configuration stored in `appsettings.json`:
+### Booking Validation
 
-```json
-"SeedAdmin": {
-  "Email": "admin@clinic.no",
-  "Password": "Admin123!"
-}
+The API prevents:
+
+* overlapping appointments for the same doctor
+* overlapping appointments for the same patient
+* bookings outside clinic working hours
+* past appointments
+
+### Scheduling Rules
+
+Appointments must:
+
+* occur between **08:00 and 18:00**
+* avoid weekends
+* follow valid durations
+
+Allowed durations:
+
+```
+15 minutes
+30 minutes
+45 minutes
+60 minutes
 ```
 
-Startup process:
+Time slots align to:
 
-* Checks if Admin exists
-* Creates one if missing
-* Password is securely hashed before storage
-
-### Admin Role Implementation Design
-
-This project does not use a separate Admin model or table. Instead, the Admin user is stored in the existing Patients table as a registered patient with a role assignment:
-
-- Role = "Admin"
-
-- IsRegistered = true
-
-- Password stored hashed
-
-This approach:
-
--  Keeps authentication unified in one user table
-
-- Avoids duplicate user entities
-
-- Enables role-based authorization via JWT claims
-
-- Aligns with common role-based access control practices
-
-This allows immediate administrative access after setup while maintaining a simple and secure data model.
----
-
-## 14. Patient Data & Privacy Consideration
-
-The exam brief references extended patient personal information.
-In this implementation, only essential appointment-related data is stored:
-
-* First name
-* Last name
-* Email
-* Date of birth
-* Gender
-
-Sensitive identifiers (SSN, tax number, religion, Driver’s license number and medical insurance membership number) were intentionally not stored due to privacy and security considerations.
-
-This approach:
-
-* Minimizes sensitive data exposure
-* Supports GDPR-conscious design
-* Still satisfies functional booking requirements
-
-In production healthcare systems, such data would require:
-
-* Encryption
-* Strict access control
-* Regulatory compliance.
+```
+:00
+:15
+:30
+:45
+```
 
 ---
 
-## 15. Security Note (Development Configuration)
+# Available Appointment Slots
 
-For exam development purposes:
+An endpoint is available to generate available booking slots based on:
 
-* Database connection string
-* JWT secret key
-* Admin seed credentials
+* clinic opening hours
+* selected duration
+* existing appointments
 
-are stored in `appsettings.json`.
-
-In production environments, these should be moved to:
-
-* Environment variables
-* Secret managers
-* Secure configuration providers.
+This assists the frontend in displaying available appointment times while keeping scheduling validation inside the backend.
 
 ---
 
-## 16. Additional Endpoints Added
+# Global Exception Middleware
 
-Beyond minimum exam requirements:
+A custom `GlobalExceptionMiddleware` provides:
 
-* Doctor filtering by clinic/speciality
-* Appointment filtering endpoints (admin overview)
-* Doctor search endpoint
-* Available appointment slots endpoint
+* consistent JSON error responses
+* centralized error handling
+* simplified controller logic
 
-These enhance usability while maintaining required functionality.
+This ensures predictable API responses and improved debugging.
 
 ---
 
-## System Endpoints
+# Admin User Seeding
 
-The API exposes additional system endpoints used for service information and monitoring.
+An administrator account is automatically created during application startup if one does not already exist.
 
-### API Root Endpoint
+The admin user is stored in the existing **Patients table** and assigned the role:
 
-Provides basic information about the running API service.
+```
+Admin
+```
 
+Credentials are loaded from environment configuration and the password is securely hashed before storage.
+
+This allows immediate administrative access without manual database setup.
+
+---
+
+# Data Validation
+
+Server-side validation is implemented using **DataAnnotations** on DTO models.
+
+Examples include:
+
+* required fields
+* email format validation
+* appointment duration rules
+* registration validation
+
+This ensures data integrity before persistence.
+
+---
+
+# System Endpoints
+
+Additional endpoints are available for service monitoring.
+
+API root:
+
+```
 GET /
 https://api.ranjitnair.dev
+```
 
-Example response:
+Health check endpoint:
 
-{
-  "name": "Clinic Appointment Booking API",
-  "version": "1.0",
-  "environment": "Production",
-  "documentation": "https://api.ranjitnair.dev/doc",
-  "repository": "https://github.com/ranjitwn/clinic-appointment-system",
-  "status": "Running",
-  "timestamp": "UTC timestamp"
-}
-
-This endpoint allows users and developers to quickly verify that the API is running and access the documentation.
-
----
-
-### Health Check Endpoint
-
-Used by monitoring systems and cloud infrastructure to verify that the API service is operational.
-
+```
 GET /health
 https://api.ranjitnair.dev/health
+```
 
-Example response:
-
-Healthy
-
-This endpoint verifies that the API service is running and that critical dependencies such as the database are reachable.
+These endpoints allow infrastructure or monitoring systems to verify that the service is operational.
 
 ---
 
-## System Monitoring
+# Summary
 
-The backend API also provides system monitoring endpoints.
+The backend API provides:
 
-API Root:
-https://api.ranjitnair.dev
-
-Health Check:
-https://api.ranjitnair.dev/health
-
----
-
-## 17. Summary
-
-This backend includes:
-
-* Full clinic appointment REST API
-* Guest + registered patient workflows
+* RESTful clinic appointment scheduling system
+* guest and registered patient booking workflows
 * JWT authentication
-* Role-based authorization
-* DTO validation
-* Appointment conflict validation
-* Service-layer business logic
-* Global exception middleware
-* Swagger documentation
-* MySQL EF Core database with migrations
-* Admin seeding
-
----
-
-
+* role-based authorization
+* DTO-based API contracts
+* service-layer architecture
+* scheduling conflict validation
+* centralized error handling
+* Swagger API documentation
+* MySQL database using EF Core migrations
+* cloud deployment support for Azure
