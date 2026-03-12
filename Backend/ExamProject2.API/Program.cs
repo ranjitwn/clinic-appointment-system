@@ -186,4 +186,18 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () =>
+{
+    return Results.Ok(new
+    {
+        name = "Clinic Appointment Booking API",
+        version = "1.0",
+        environment = "Production",
+        documentation = "https://api.ranjitnair.dev/doc",
+        repository = "https://github.com/ranjitwn/clinic-appointment-system",
+        status = "Running",
+        timestamp = DateTime.UtcNow
+    });
+});
+
 app.Run();
