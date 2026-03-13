@@ -21,12 +21,6 @@ nav a {
   padding: 4px 6px;
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-
 nav a:hover {
   opacity: 0.8;
 }
@@ -57,12 +51,7 @@ footer {
   width: 100%;
   max-width: 900px;
   margin: 1.5rem auto;
-  transition: transform 0.2s ease;
   word-break: break-word;
-}
-
-.card:hover {
-  transform: translateY(-2px);
 }
 
 .card h2 {
