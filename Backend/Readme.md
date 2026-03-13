@@ -42,6 +42,11 @@ https://api.ranjitnair.dev/doc
 * Global exception handling middleware
 * DTO-based API contracts
 
+### Testing
+
+* xUnit
+* Entity Framework Core InMemory database provider
+
 ---
 
 # Running the API Locally
@@ -295,6 +300,46 @@ https://api.ranjitnair.dev/health
 ```
 
 These endpoints allow infrastructure or monitoring systems to verify that the service is operational.
+
+---
+
+# Automated Unit Testing
+
+The backend includes unit tests for core business logic implemented in the service layer.
+
+Testing is performed using:
+
+* **xUnit**
+* **Entity Framework Core InMemory database provider**
+
+The InMemory provider allows tests to run without connecting to the real MySQL database.
+
+This enables fast and isolated validation of:
+
+* appointment scheduling logic
+* authentication behavior
+* business rules enforced in services
+
+Example tested service:
+
+```
+AppointmentService
+```
+
+Tests validate rules such as:
+
+* preventing double bookings
+* preventing past appointments
+* enforcing clinic working hours
+* validating appointment duration
+
+Run tests locally:
+
+```bash
+dotnet test
+```
+
+Tests are also executed automatically through **GitHub Actions CI/CD pipelines** whenever changes are pushed to the repository.
 
 ---
 

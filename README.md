@@ -135,7 +135,7 @@ Frontend → Frontend application documentation
 
 ## Start Backend
 
-```
+```bash
 cd Backend/ExamProject2.API
 dotnet restore
 dotnet ef database update
@@ -158,7 +158,7 @@ http://localhost:5108/doc
 
 ## Start Frontend
 
-```
+```bash
 cd Frontend
 npm install
 npm run dev
@@ -207,6 +207,35 @@ Deployment is triggered automatically when changes are pushed to the repository.
 
 ---
 
+# Automated Testing
+
+The backend includes automated unit tests to validate core business logic in the service layer.
+
+Testing is implemented using:
+
+* **xUnit testing framework**
+* **Entity Framework Core InMemory provider**
+* Isolated service-level tests without external dependencies
+
+This allows validation of scheduling rules and API logic without requiring a real database connection.
+
+Example tested components:
+
+```
+AppointmentService
+AuthService
+```
+
+Tests are executed automatically in the **CI/CD pipeline** to ensure application stability before deployment.
+
+Run tests locally:
+
+```bash
+dotnet test
+```
+
+---
+
 # Configuration
 
 Sensitive configuration values such as database connection strings, JWT keys, and admin credentials are stored using **environment variables in Azure** rather than inside the repository.
@@ -226,4 +255,5 @@ This project demonstrates:
 * React + TypeScript frontend development
 * Cloud deployment on Microsoft Azure
 * CI/CD automation with GitHub Actions
+* Automated backend unit testing
 * Secure configuration using environment variables
