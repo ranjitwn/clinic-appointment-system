@@ -6,13 +6,19 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
+  font-weight: 600;
+}
+
+header h2 {
+  font-weight: 600;
 }
 
 /* Navigation */
-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 4px 6px;
 }
 
 nav a {
@@ -22,7 +28,7 @@ nav a {
 }
 
 nav a:hover {
-  text-decoration: underline;
+  opacity: 0.8;
 }
 
 .nav-link {
@@ -52,6 +58,11 @@ footer {
   max-width: 900px;
   margin: 1.5rem auto;
   transition: transform 0.2s ease;
+  word-break: break-word;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .card h2 {
@@ -89,12 +100,19 @@ footer {
 
 /* Buttons */
 button {
+  font-size: 0.95rem;
   background: #0ea5a4;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:focus {
+  outline: 2px solid #0ea5a4;
+  outline-offset: 2px;
 }
 
 button:hover {
@@ -183,7 +201,7 @@ small {
   align-items: center;
   box-shadow: 0 6px 16px rgba(0,0,0,0.2);
   z-index: 9999;
-  animation: slideIn 0.25s ease;
+  animation: slideIn 0.25s ease-out;
   pointer-events: auto;
   transform: translateZ(0); 
 }

@@ -24,6 +24,19 @@ https://api.ranjitnair.dev/health
 
 ---
 
+# Demo Access
+
+The administrator account is automatically seeded when the application starts.
+
+To explore the administrative functionality of the system you can log in using the demo administrator account:
+
+**Admin Email:** admin@clinic.com  
+**Admin Password:** Admin123!
+
+---
+
+---
+
 # Application Screenshots
 
 ### Doctor Search
