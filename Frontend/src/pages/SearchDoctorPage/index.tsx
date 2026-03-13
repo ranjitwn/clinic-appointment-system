@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { searchDoctors } from "../../services/doctorService";
 import type { DoctorSearchDTO } from "../../types/DoctorSearchDTO";
 import DoctorCard from "../../components/DoctorCard";
@@ -8,12 +8,14 @@ export default function SearchDoctorPage() {
   const [doctors, setDoctors] = useState<DoctorSearchDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
 
-  async function handleSearch(e: React.SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
+  useEffect(() => {
+  if (!query.trim()) {
+    setDoctors([]);
+    return;
+  }
 
-    setHasSearched(true);
+  const timeout = setTimeout(async () => {
     setLoading(true);
     setError("");
 
@@ -29,7 +31,13 @@ export default function SearchDoctorPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, 400);
+
+  return () => {
+    clearTimeout(timeout);
+  };
+
+}, [query]);
 
   return (
     <main>
@@ -37,27 +45,20 @@ export default function SearchDoctorPage() {
         <div className="card">
           <h1>Search Doctors</h1>
 
-          <form
-            onSubmit={(e) => {
-              void handleSearch(e);
-            }}
-            className="search-form"
-          >
+          <div className="search-form">
             <input
-              placeholder="Search by doctor first or last name"
+              placeholder="Search doctors by name..."
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
               }}
-              required
             />
-            <button type="submit">Search</button>
-          </form>
+          </div>
 
           {loading && <p>Searching...</p>}
           {error && <p>{error}</p>}
 
-          {hasSearched && !loading && doctors.length === 0 && !error && (
+          {!loading && query && doctors.length === 0 && !error && (
             <p className="no-appointments">
               No doctors found for your search.
             </p>
