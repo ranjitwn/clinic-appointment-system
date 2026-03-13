@@ -63,6 +63,25 @@ Communication between frontend and backend is performed through **HTTPS REST API
 
 ---
 
+# Database Design
+
+The relational database schema was designed using Entity Framework Core Code-First migrations and is hosted on Azure Database for MySQL.
+
+The system revolves around the **Appointments** entity which connects patients, doctors, clinics, and appointment categories. Supporting tables such as **Specialities** and **Clinics** provide structured medical data used by the application.
+
+Key relationships include:
+
+• A **Doctor** belongs to a **Clinic** and has a **Speciality**  
+• A **Patient** can create multiple **Appointments**  
+• Each **Appointment** is linked to a **Doctor**, **Clinic**, and **Category**  
+• **Categories** define the type of appointment (Check-up, Consultation, etc.)
+
+The following ER diagram shows the full database structure and relationships.
+
+![Database ER Diagram](docs/er-diagram.png)
+
+---
+
 # Project Structure
 
 ```
