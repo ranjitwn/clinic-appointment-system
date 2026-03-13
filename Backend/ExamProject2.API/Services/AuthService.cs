@@ -56,7 +56,8 @@ namespace ExamProject2.API.Services
                 LastName = dto.LastName,
                 Email = dto.Email,
                 DateOfBirth = dto.DateOfBirth,
-                IsRegistered = true
+                IsRegistered = true,
+                Role = "Patient"
             };
 
             patient.Password = hasher.HashPassword(patient, dto.Password);

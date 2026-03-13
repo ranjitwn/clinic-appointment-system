@@ -1,11 +1,10 @@
 namespace ExamProject2.API.DTOs
 {
-    #nullable disable
     public class DoctorSearchDto
     {
         public int DoctorId { get; set; }
-        public string FullName { get; set; }
-        public string Clinic { get; set; }
-        public string Speciality { get; set; }
+        public required string FullName { get; set; }
+        public required string Clinic { get; set; }
+        public required string Speciality { get; set; }
     }
 }

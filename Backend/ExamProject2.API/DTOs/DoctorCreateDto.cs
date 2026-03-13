@@ -2,14 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ExamProject2.API.DTOs
 {
-    #nullable disable
     public class DoctorCreateDto
     {
         [Required]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         [Required]  
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]

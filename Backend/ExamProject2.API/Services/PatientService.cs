@@ -61,7 +61,8 @@ namespace ExamProject2.API.Services
                 Email = dto.Email,
                 DateOfBirth = dto.DateOfBirth,
                 Gender = dto.Gender,
-                IsRegistered = false
+                IsRegistered = false,
+                Role = "Patient"
             };
 
             _dataContext.Patients.Add(patient);

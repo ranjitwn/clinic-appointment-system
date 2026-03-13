@@ -16,9 +16,12 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseMySQL(connectionString);
 });
 
 // CORS configuration to allow frontend access
@@ -39,7 +42,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks()
     .AddMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString,
         name: "mysql",
         timeout: TimeSpan.FromSeconds(5));
 
@@ -88,8 +91,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // JWT Authentication Configuration
-var jwtSettings = new JwtSettings();
-builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings);
+var jwtSettings = builder.Configuration
+    .GetSection("JwtSettings")
+    .Get<JwtSettings>()
+    ?? throw new InvalidOperationException("JwtSettings configuration missing.");
+
 builder.Services.AddSingleton(jwtSettings);
 
 // Configure JWT authentication

@@ -62,7 +62,8 @@ public class AuthServiceTests
             FirstName = "Jane",
             LastName = "Doe",
             Email = "jane@test.com",
-            IsRegistered = true
+            IsRegistered = true,
+            Role = "Patient"
         });
 
         await db.SaveChangesAsync();

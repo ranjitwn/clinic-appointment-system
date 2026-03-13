@@ -2,7 +2,7 @@ namespace ExamProject2.API.DTOs
 {
     public class AuthLoginResultDto
     {
-        public string Token { get; set; } 
-        public string Role { get; set; } 
+        public required string Token { get; set; } 
+        public required string Role { get; set; } 
     }
 }
