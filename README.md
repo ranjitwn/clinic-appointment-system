@@ -10,13 +10,13 @@ The system allows patients to search for doctors, book appointments, manage book
 
 # Project Background
 
-This project was originally developed as part of the **Noroff Backend Development – Exam Project **.
+This project was originally developed as part of the **Noroff Backend Development – Exam Project 2**.
 
 The original brief required building a **full-stack clinic appointment booking system** with:
 
 - a **MySQL database** designed using **Entity Framework Core Code-First**
 - an **ASP.NET Core REST API**
-- a **React frontend / Typescript**
+- a **React + TypeScript frontend**
 - **Swagger API documentation**
 - support for both **guest users** and **registered patients**
 - **authentication** for registered users

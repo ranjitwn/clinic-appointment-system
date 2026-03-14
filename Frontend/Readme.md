@@ -1,11 +1,12 @@
 # Clinic Appointment Frontend (React + TypeScript + Vite)
 
-This project is the frontend application for **Exam Project 2 – Clinic Appointment Booking System**.
-It communicates with the ASP.NET Core backend API and provides patient booking, authentication, search, and admin management interfaces.
+This project is the **frontend application for the Clinic Appointment Booking System**. It provides the user interface for patients and administrators and communicates with the **ASP.NET Core Web API backend**.
+
+The system demonstrates a modern full‑stack architecture using **React, TypeScript, and Vite on the frontend**, combined with an **ASP.NET Core REST API and MySQL database on the backend**, deployed to **Microsoft Azure**.
 
 ---
 
-## 1. Application Setup Instructions
+# 1. Application Setup Instructions
 
 1. Open terminal inside the frontend folder:
 
@@ -31,13 +32,13 @@ npm run dev
 http://localhost:5173
 ```
 
-> Make sure backend API is running before starting the frontend.
+⚠️ Ensure the **backend API is running** before starting the frontend.
 
 ---
 
-## 2. Environment Configuration
+# 2. Environment Configuration
 
-Frontend uses an environment variable for backend connection.
+The frontend uses an environment variable to define the backend API base URL.
 
 File:
 
@@ -45,34 +46,43 @@ File:
 .env.local
 ```
 
-Example:
+Example configuration for local development:
 
 ```
 VITE_API_BASE_URL=http://localhost:5108
 ```
 
-This must match the backend API URL.
+This must match the running backend API URL.
+
+For production deployment, the variable should point to the deployed API endpoint.
 
 ---
 
-## 3. Technologies Used
+# 3. Technologies Used
 
-Core technologies:
+## Frontend Framework
 
 * React 18
 * TypeScript
 * Vite
+
+## Routing
+
 * React Router DOM
-* Fetch API for backend communication
 
-Development tooling:
+## Backend Communication
 
-* ESLint (strict TypeScript configuration)
-* Vite build tooling (@vitejs/plugin-react for React Fast Refresh and JSX support)
+* Fetch API
+
+## Development Tooling
+
+* ESLint with strict TypeScript configuration
+* Vite build tooling
+* @vitejs/plugin-react for React Fast Refresh and JSX support
 
 ---
 
-## 4. Project Structure
+# 4. Project Structure
 
 ```
 Frontend/
@@ -169,51 +179,51 @@ Frontend/
 
 ---
 
-## 5. Authentication Flow
+# 5. Authentication Flow
 
-### Guest User
+## Guest User
 
-* Can book appointments without login.
+* Can book appointments without creating an account.
 * Must provide personal details during booking.
 * Cannot manage appointments unless they later register using the same email.
-* If the guest registers with the same email address, the existing guest record is upgraded to a registered patient and previous appointments become accessible.
+* If a guest later registers using the same email address, the existing guest record is upgraded to a registered patient and previous appointments become accessible.
 
-### Registered Patient
+## Registered Patient
 
-* Can register and login.
+* Can register and log in.
 * JWT token stored in localStorage.
 * Can view, update, and cancel their own appointments.
 
-### Admin User
+## Admin User
 
-* Admin login uses same authentication system as patients.
-* Role-based UI access enabled.
+* Uses the same authentication system as patients.
+* Role‑based UI access is enabled.
 * Admin dashboard allows managing clinics, doctors, categories, specialities, and viewing appointments.
 
 ---
 
-## 6. Routing Overview
+# 6. Routing Overview
 
 Routes implemented:
 
-* `/` → Appointment booking page
-* `/book` → Booking page
+* `/` → Home page
+* `/book` → Appointment booking page
 * `/search` → Doctor search
 * `/login` → Patient login
 * `/register` → Patient registration
 * `/appointments` → Patient appointment management (protected)
 * `/admin` → Admin dashboard (role protected)
 
-Protected routes use role-based authorization from stored JWT token.
+Protected routes use role‑based authorization derived from the stored JWT token.
 
 ---
 
-## 7. UI Layout
+# 7. UI Layout
 
 Common layout components:
 
-* Header navigation on all pages
-* Footer displaying current year
+* Header navigation displayed on all pages
+* Footer displaying the current year
 * Shared popup notification component
 * Reusable button components
 
@@ -221,13 +231,13 @@ This ensures consistent UI across the application.
 
 ---
 
-## 8. Backend Communication
+# 8. Backend Communication
 
 All API communication is handled inside the `services` folder.
 
-Typical service responsibilities:
+Typical service responsibilities include:
 
-* Fetch clinics, doctors, categories
+* Fetch clinics, doctors, and categories
 * Appointment booking and updates
 * Authentication requests
 * Admin CRUD operations
@@ -236,57 +246,76 @@ Authorization headers are automatically included for protected endpoints.
 
 ---
 
-## 9. Validation & User Feedback
+# 9. System Architecture
+
+The frontend communicates with the backend through REST API calls.
+
+```
+React Frontend
+      ↓
+API Services (Fetch)
+      ↓
+ASP.NET Core Controllers
+      ↓
+Service Layer
+      ↓
+Entity Framework Core
+      ↓
+MySQL Database
+```
+
+This separation keeps the frontend responsible for **user interaction and presentation**, while the backend handles **business logic, validation, authentication, and data persistence**.
+
+---
+
+# 10. Validation & User Feedback
 
 Frontend validation includes:
 
 * Required field validation
 * Date of birth validation
 * Appointment time selection validation
-* Popup error/success messages
+* Popup error and success messages
 
-Loading indicators are shown during API calls.
+Loading indicators are displayed during API calls.
 
 ---
 
-## 10. CORS Integration
+# 11. CORS Integration
 
-Frontend communicates with backend using configured CORS policy.
-
-Backend allows:
+During development the backend allows requests from:
 
 ```
 http://localhost:5173
 ```
 
-This enables frontend-backend communication during development.
+This enables local frontend–backend communication.
 
 ---
 
-## 11. Security Notes
+# 12. Security Notes
 
 * JWT tokens stored in localStorage for authentication.
-* No sensitive secrets stored in frontend.
-* API base URL controlled via environment variables.
+* No sensitive secrets stored in the frontend application.
+* API base URL managed through environment variables.
 
-For production:
+For production deployments:
 
-* Use secure token storage strategy.
-* Use HTTPS.
-* Configure secure environment variables.
+* HTTPS must be enforced.
+* Secure environment variables should be configured.
 
 ---
 
-## 12. Summary
+# 13. Summary
 
-This frontend provides:
+This frontend application provides:
 
 * Clinic appointment booking interface
 * Guest and registered patient workflows
-* JWT-based authentication UI
-* Role-based admin dashboard
+* JWT‑based authentication UI
+* Role‑based admin dashboard
 * Doctor search functionality
 * Responsive UI with reusable components
-* Integration with ASP.NET Core backend API
+* Integration with the ASP.NET Core backend API
 
----
+Together with the backend API, the system demonstrates a **full‑stack clinic appointment booking platform built with ASP.NET Core, React, TypeScript, and MySQL and deployed to Microsoft Azure**.
