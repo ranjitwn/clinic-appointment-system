@@ -23,7 +23,12 @@ namespace ExamProject2.API.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception");
+                _logger.LogError(
+                    ex,
+                    "Unhandled exception occurred while processing {Method} {Path}",
+                    context.Request.Method,
+                    context.Request.Path
+                );
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";

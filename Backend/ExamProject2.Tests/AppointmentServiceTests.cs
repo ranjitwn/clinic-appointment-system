@@ -3,6 +3,7 @@ using ExamProject2.API.DTOs;
 using ExamProject2.API.Models;
 using ExamProject2.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace ExamProject2.Tests;
@@ -20,7 +21,16 @@ public class AppointmentServiceTests
 
     private PatientService GetPatientService(DataContext db)
     {
-        return new PatientService(db);
+        return new PatientService(db, NullLogger<PatientService>.Instance);
+    }
+
+    private AppointmentService GetService(DataContext db)
+    {
+        return new AppointmentService(
+            db,
+            GetPatientService(db),
+            NullLogger<AppointmentService>.Instance
+        );
     }
 
     [Fact]
@@ -34,7 +44,7 @@ public class AppointmentServiceTests
 
         await db.SaveChangesAsync();
 
-        var service = new AppointmentService(db, GetPatientService(db));
+        var service = GetService(db);
 
         var dto = new AppointmentCreateDto
         {
@@ -65,7 +75,7 @@ public class AppointmentServiceTests
 
         await db.SaveChangesAsync();
 
-        var service = new AppointmentService(db, GetPatientService(db));
+        var service = GetService(db);
 
         var dto = new AppointmentCreateDto
         {
@@ -89,7 +99,7 @@ public class AppointmentServiceTests
     public async Task DeleteAppointment_ShouldReturnFalse_WhenNotFound()
     {
         var db = GetDb();
-        var service = new AppointmentService(db, GetPatientService(db));
+        var service = GetService(db);
 
         var result = await service.DeleteAppointmentAsync(1, 1);
 
@@ -100,7 +110,7 @@ public class AppointmentServiceTests
     public async Task GetAvailableSlots_ShouldReturnSlots()
     {
         var db = GetDb();
-        var service = new AppointmentService(db, GetPatientService(db));
+        var service = GetService(db);
 
         var slots = await service.GetAvailableSlotsAsync(
             doctorId: 1,

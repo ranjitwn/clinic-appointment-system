@@ -2,6 +2,7 @@ using ExamProject2.API.Data;
 using ExamProject2.API.DTOs;
 using ExamProject2.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ExamProject2.API.Services
 {
@@ -9,11 +10,13 @@ namespace ExamProject2.API.Services
     {
         private readonly DataContext _dataContext;
         private readonly PatientService _patientService;
+        private readonly ILogger<AppointmentService> _logger;
 
-        public AppointmentService(DataContext dataContext, PatientService patientService)
+        public AppointmentService(DataContext dataContext, PatientService patientService, ILogger<AppointmentService> logger)
         {
             _dataContext = dataContext;
             _patientService = patientService;
+            _logger = logger;
         }
 
         private static AppointmentDto MapToDto(Appointment a)
@@ -39,6 +42,8 @@ namespace ExamProject2.API.Services
 
         public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(int patientId)
         {
+            _logger.LogInformation("Fetching appointments for Patient {PatientId}", patientId);
+
             var appointments = await _dataContext.Appointments
                 .Where(a => a.PatientId == patientId)
                 .Include(a => a.Clinic)
@@ -52,13 +57,20 @@ namespace ExamProject2.API.Services
 
         public async Task<string?> CreateAppointmentAsync(AppointmentCreateDto dto, int? patientId)
         {
+             _logger.LogInformation("Attempting to create appointment for Doctor {DoctorId} at {AppointmentDate}",
+                dto.DoctorId,
+                dto.AppointmentDate);
+
             // Guest booking → create patient
             if (patientId == null)
             {
                 if (string.IsNullOrWhiteSpace(dto.FirstName) ||
                     string.IsNullOrWhiteSpace(dto.LastName) ||
                     string.IsNullOrWhiteSpace(dto.Email))
-                    return "Guest patient details are required.";
+                    {
+                        _logger.LogWarning("Guest booking attempted without required patient details.");
+                        return "Guest patient details are required.";
+                    }
 
                 var error = await _patientService.CreatePatientAsync(
                     new PatientCreateDto
@@ -70,13 +82,19 @@ namespace ExamProject2.API.Services
                     });
 
                 if (error != null)
+                {
+                    _logger.LogWarning("Guest patient creation failed: {Error}", error);
                     return error;
+                }                    
 
                 var patient = await _dataContext.Patients
                     .FirstOrDefaultAsync(p => p.Email.ToLower() == dto.Email.ToLower());
 
                 if (patient == null)
+                {
+                    _logger.LogError("Guest patient creation failed unexpectedly for email {Email}", dto.Email);
                     return "Failed to create guest patient.";
+                }
 
                 patientId = patient.Id;
             }
@@ -158,6 +176,10 @@ namespace ExamProject2.API.Services
 
             if (slotConflict)
             {
+                _logger.LogWarning("Doctor booking conflict detected for Doctor {DoctorId} at {AppointmentDate}",
+                    dto.DoctorId,
+                    dto.AppointmentDate);
+
                 return "Doctor is already booked at this time.";
             }
 
@@ -170,6 +192,11 @@ namespace ExamProject2.API.Services
 
             if (patientConflict)
             {
+                _logger.LogWarning(
+                    "Patient {PatientId} attempted double booking at {AppointmentDate}",
+                    patientId,
+                    dto.AppointmentDate);
+
                 return "Patient already has an appointment at this time.";
             }
 
@@ -186,6 +213,11 @@ namespace ExamProject2.API.Services
             _dataContext.Appointments.Add(appointment);
             await _dataContext.SaveChangesAsync();
 
+             _logger.LogInformation("Appointment created successfully for Patient {PatientId} with Doctor {DoctorId} at {AppointmentDate}",
+                patientId,
+                dto.DoctorId,
+                dto.AppointmentDate);
+
             return null;
         }
 
@@ -193,11 +225,19 @@ namespace ExamProject2.API.Services
 
         public async Task<string?> UpdateAppointmentAsync(int id, int patientId, AppointmentUpdateDto dto)
         {
+             _logger.LogInformation("Patient {PatientId} attempting to update appointment {AppointmentId}", patientId, id);
+
             var appointment = await _dataContext.Appointments
                 .FirstOrDefaultAsync(a => a.Id == id && a.PatientId == patientId);
 
             if (appointment == null)
+            {
+                _logger.LogWarning("Update failed. Appointment {AppointmentId} not found for Patient {PatientId}",
+                    id,
+                    patientId);
+
                 return "Appointment not found.";
+            }
 
             // Validate duration
             if (dto.DurationMinutes != 15 &&
@@ -260,26 +300,38 @@ namespace ExamProject2.API.Services
 
             await _dataContext.SaveChangesAsync();
 
+             _logger.LogInformation("Appointment {AppointmentId} updated successfully by Patient {PatientId}", id, patientId);
+
             return null;
         }
 
 
         public async Task<bool> DeleteAppointmentAsync(int id, int patientId)
         {
+             _logger.LogInformation("Patient {PatientId} attempting to delete appointment {AppointmentId}", patientId, id);
+
             var appointment = await _dataContext.Appointments
                 .FirstOrDefaultAsync(a => a.Id == id && a.PatientId == patientId);
 
             if (appointment == null)
+                {
+                _logger.LogWarning("Delete failed. Appointment {AppointmentId} not found for Patient {PatientId}", id, patientId);
+
                 return false;
+            }
 
             _dataContext.Appointments.Remove(appointment);
             await _dataContext.SaveChangesAsync();
+
+            _logger.LogInformation("Appointment {AppointmentId} deleted by Patient {PatientId}", id, patientId);
 
             return true;
         }
 
         public async Task<List<AppointmentDto>> GetAppointmentsByClinicAsync(int clinicId)
         {
+             _logger.LogInformation("Fetching appointments for Clinic {ClinicId}", clinicId);
+
             var appointments = await _dataContext.Appointments
                 .Where(a => a.ClinicId == clinicId)
                 .Include(a => a.Clinic)
@@ -293,6 +345,8 @@ namespace ExamProject2.API.Services
 
         public async Task<List<AppointmentDto>> GetAppointmentsByDoctorAsync(int doctorId)
         {
+             _logger.LogInformation("Fetching appointments for Doctor {DoctorId}", doctorId);
+
             var appointments = await _dataContext.Appointments
                 .Where(a => a.DoctorId == doctorId)
                 .Include(a => a.Clinic)
@@ -309,6 +363,8 @@ namespace ExamProject2.API.Services
             DateTime date,
             int slotDuration = 30)
         {
+            _logger.LogInformation("Fetching available slots for Doctor {DoctorId} on {Date}", doctorId, date);
+            
             // Prevent weekend slots
             if (date.DayOfWeek == DayOfWeek.Saturday ||
                 date.DayOfWeek == DayOfWeek.Sunday)

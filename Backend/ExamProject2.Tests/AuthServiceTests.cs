@@ -4,6 +4,7 @@ using ExamProject2.API.DTOs;
 using ExamProject2.API.Models;
 using ExamProject2.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace ExamProject2.Tests;
@@ -30,12 +31,20 @@ public class AuthServiceTests
         };
     }
 
+    private AuthService GetService(DataContext db)
+    {
+        return new AuthService(
+            db,
+            GetJwtSettings(),
+            NullLogger<AuthService>.Instance
+        );
+    }
+
     [Fact]
     public async Task RegisterAsync_ShouldFail_WhenDateOfBirthIsInFuture()
     {
         var db = GetInMemoryDb();
-        var jwt = GetJwtSettings();
-        var service = new AuthService(db, jwt);
+        var service = GetService(db);
 
         var dto = new PatientRegisterDto
         {
@@ -55,7 +64,6 @@ public class AuthServiceTests
     public async Task RegisterAsync_ShouldFail_WhenPatientAlreadyRegistered()
     {
         var db = GetInMemoryDb();
-        var jwt = GetJwtSettings();
 
         db.Patients.Add(new Patient
         {
@@ -68,7 +76,7 @@ public class AuthServiceTests
 
         await db.SaveChangesAsync();
 
-        var service = new AuthService(db, jwt);
+        var service = GetService(db);
 
         var dto = new PatientRegisterDto
         {
@@ -88,7 +96,6 @@ public class AuthServiceTests
     public async Task LoginAsync_ShouldReturnToken_WhenCredentialsAreValid()
     {
         var db = GetInMemoryDb();
-        var jwt = GetJwtSettings();
 
         var patient = new Patient
         {
@@ -105,7 +112,7 @@ public class AuthServiceTests
         db.Patients.Add(patient);
         await db.SaveChangesAsync();
 
-        var service = new AuthService(db, jwt);
+        var service = GetService(db);
 
         var dto = new PatientLoginDto
         {

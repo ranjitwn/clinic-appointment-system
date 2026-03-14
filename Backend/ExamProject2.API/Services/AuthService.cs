@@ -8,24 +8,30 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
+
 namespace ExamProject2.API.Services
 {
     public class AuthService
     {
         private readonly DataContext _dataContext;
         private readonly JwtSettings _jwtSettings;
+        private readonly ILogger<AuthService> _logger;
 
-        public AuthService(DataContext dataContext, JwtSettings jwtSettings)
+        public AuthService(DataContext dataContext, JwtSettings jwtSettings, ILogger<AuthService> logger)
         {
             _dataContext = dataContext;
             _jwtSettings = jwtSettings;
+            _logger = logger;
         }
 
         public async Task<string?> RegisterAsync(PatientRegisterDto dto)
         {
+             _logger.LogInformation("Register attempt for email {Email}", dto.Email);
+
             // Prevent future DOB
             if (dto.DateOfBirth >= DateTime.Today)
             {
+                _logger.LogWarning("Registration failed due to invalid DOB for email {Email}", dto.Email);
                 return "Date of birth cannot be in the future.";
 
             }    
@@ -40,6 +46,7 @@ namespace ExamProject2.API.Services
             {
                 if (existing.IsRegistered)
                 {
+                     _logger.LogWarning("Registration attempted for already registered email {Email}", dto.Email);
                     return "Patient is already registered.";
                 }
 
@@ -47,6 +54,8 @@ namespace ExamProject2.API.Services
                 existing.IsRegistered = true;
 
                 await _dataContext.SaveChangesAsync();
+                _logger.LogInformation("Guest patient upgraded to registered account for email {Email}", dto.Email);
+
                 return null;
             }
 
@@ -65,11 +74,15 @@ namespace ExamProject2.API.Services
             _dataContext.Patients.Add(patient);
             await _dataContext.SaveChangesAsync();
 
+            _logger.LogInformation("New patient registered successfully with email {Email}", dto.Email);
+
             return null;
         }
 
          public async Task<AuthLoginResultDto?> LoginAsync(PatientLoginDto dto)
         {
+            _logger.LogInformation("Login attempt for email {Email}", dto.Email);
+
             // Finding patient by email
            var patient = await _dataContext.Patients
             .FirstOrDefaultAsync(p => p.Email.ToLower() == dto.Email.ToLower());
@@ -77,12 +90,14 @@ namespace ExamProject2.API.Services
             // Checking patient exists and is registered
             if (patient == null || !patient.IsRegistered)
             {
+                _logger.LogWarning("Login failed for email {Email}: patient not found or not registered", dto.Email);
                 return null;
             }
 
             // Ensure password exists (guest users have null)
             if (patient.Password == null)
             {
+                _logger.LogWarning("Login failed for email {Email}: password missing", dto.Email);
                 return null;
             }
 
@@ -96,8 +111,11 @@ namespace ExamProject2.API.Services
 
             if (result == PasswordVerificationResult.Failed)
             {
+                _logger.LogWarning("Login failed for email {Email}: invalid password", dto.Email);
                 return null;
             }
+
+            _logger.LogInformation("Login successful for patient {PatientId}", patient.Id);
 
             // Generate JWT token
             var claims = new[]
@@ -122,6 +140,8 @@ namespace ExamProject2.API.Services
             );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(jwttoken);
+
+            _logger.LogInformation("JWT token generated for patient {PatientId}", patient.Id);
 
             return new AuthLoginResultDto
             {
