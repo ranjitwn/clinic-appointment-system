@@ -10,7 +10,7 @@ The system allows patients to search for doctors, book appointments, manage book
 
 # Project Background
 
-This project was originally developed as part of the **Noroff Backend Development – Exam Project 2**.
+This project was originally developed as part of the **Noroff Backend Development program**.
 
 The original brief required building a **full-stack clinic appointment booking system** with:
 
@@ -44,6 +44,80 @@ https://api.ranjitnair.dev/doc
 
 Health Check
 https://api.ranjitnair.dev/health
+
+---
+
+# Quick Start (Local Development)
+
+Clone the repository:
+
+```bash
+git clone https://github.com/ranjitwn/clinic-appointment-system.git
+cd clinic-appointment-system
+```
+
+## 1. Prepare Local Database
+
+Ensure **MySQL Server** is installed (for example via MySQL Workbench).
+
+Create a local database:
+
+```sql
+CREATE DATABASE clinicappointmentdb;
+```
+
+Update the backend connection string for your local environment.
+
+Example in `appsettings.Development.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "server=localhost;port=3306;database=clinicappointmentdb;user=root;password=yourpassword"
+  }
+}
+```
+
+---
+
+## 2. Start Backend API
+
+```bash
+cd Backend/ClinicAppointment.API
+dotnet restore
+dotnet ef database update
+dotnet run
+```
+
+Backend runs on:
+
+```
+http://localhost:5108
+```
+
+Swagger documentation:
+
+```
+http://localhost:5108/doc
+```
+
+---
+
+## 3. Start Frontend
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+Frontend runs on:
+
+```
+http://localhost:5173
+```
+
+⚠️ Ensure the backend API is running before starting the frontend.
 
 ---
 
@@ -137,8 +211,8 @@ Root
 
 Additional documentation:
 
-Backend → Backend API documentation
-Frontend → Frontend application documentation
+- Backend → Backend API documentation
+- Frontend → Frontend application documentation
 
 ---
 
@@ -182,7 +256,7 @@ Frontend → Frontend application documentation
 - Patient appointment management
 - Admin management of clinics, doctors, categories, and specialities
 - Secure REST API with role-based authorization
-- Global error handling middleware
+- Global error handling middleware with structured logging
 - Cloud deployment on Microsoft Azure
 - Automated CI/CD pipeline with GitHub Actions
 

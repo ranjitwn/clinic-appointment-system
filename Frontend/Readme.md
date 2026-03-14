@@ -72,7 +72,7 @@ For production deployment, the variable should point to the deployed API endpoin
 
 ## Backend Communication
 
-* Fetch API
+* Fetch API (REST API communication with ASP.NET Core backend)
 
 ## Development Tooling
 
@@ -206,8 +206,7 @@ Frontend/
 
 Routes implemented:
 
-* `/` → Home page
-* `/book` → Appointment booking page
+* `/` → Appointment booking page (default landing page)
 * `/search` → Doctor search
 * `/login` → Patient login
 * `/register` → Patient registration

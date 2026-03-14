@@ -148,7 +148,7 @@ Define structured request and response contracts.
 
 Entity models mapped to database tables using EF Core.
 
-### DataContext
+### Data
 
 Entity Framework database context responsible for database access.
 
