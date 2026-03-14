@@ -8,6 +8,28 @@ The system allows patients to search for doctors, book appointments, manage book
 
 ---
 
+# Project Background
+
+This project was originally developed as part of the **Noroff Backend Development – Exam Project **.
+
+The original brief required building a **full-stack clinic appointment booking system** with:
+
+- a **MySQL database** designed using **Entity Framework Core Code-First**
+- an **ASP.NET Core REST API**
+- a **React frontend / Typescript**
+- **Swagger API documentation**
+- support for both **guest users** and **registered patients**
+- **authentication** for registered users
+- CRUD functionality, validation, and appointment conflict prevention
+- a doctor search feature returning the doctor’s **name, clinic, and speciality**
+
+The exam project tested database design, API development, frontend functionality, documentation, and full-stack problem-solving. This public repository represents the **continued development of that original school project**, with additional work focused on deployment, architecture, documentation, testing, and overall portfolio quality.
+
+The implementation reflects the scope of the original exam requirements. 
+In a real-world healthcare platform the system would typically include additional capabilities such as advanced patient data management, notification systems, and extended administrative roles.
+As development continues, the platform can be expanded with additional healthcare roles (e.g., doctors, nurses, reception staff), appointment reminders, calendar integrations, and enhanced search or reporting capabilities.
+---
+
 # Live Application
 
 Frontend
@@ -32,6 +54,8 @@ To explore the administrative functionality of the system you can log in using t
 
 **Admin Email:** admin@clinic.com  
 **Admin Password:** Admin123!
+
+Admin credentials are provided for demonstration purposes only.
 
 ---
 
