@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamProject2.API", "Backend\ExamProject2.API\ExamProject2.API.csproj", "{236BD7CF-6372-E7F3-91CF-0916ADD98E2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicAppointment.API", "Backend\ClinicAppointment.API\ClinicAppointment.API.csproj", "{236BD7CF-6372-E7F3-91CF-0916ADD98E2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamProject2.Tests", "Backend\ExamProject2.Tests\ExamProject2.Tests.csproj", "{4ED3F98C-11F0-41B5-AF23-A181AA59D045}"
 EndProject

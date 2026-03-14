@@ -26,26 +26,26 @@ https://api.ranjitnair.dev/doc
 
 ### Backend Framework
 
-* ASP.NET Core (.NET 9)
-* Entity Framework Core (Code-First)
-* MySQL database
+- ASP.NET Core (.NET 9)
+- Entity Framework Core (Code-First)
+- MySQL database
 
 ### Security
 
-* JWT Authentication
-* Role-based authorization
-* Password hashing
+- JWT Authentication
+- Role-based authorization
+- Password hashing
 
 ### API Infrastructure
 
-* Swagger / OpenAPI documentation
-* Global exception handling middleware
-* DTO-based API contracts
+- Swagger / OpenAPI documentation
+- Global exception handling middleware
+- DTO-based API contracts
 
 ### Testing
 
-* xUnit
-* Entity Framework Core InMemory database provider
+- xUnit
+- Entity Framework Core InMemory database provider
 
 ---
 
@@ -54,7 +54,7 @@ https://api.ranjitnair.dev/doc
 Navigate to the backend project:
 
 ```bash
-cd Backend/ExamProject2.API
+cd Backend/ClinicAppointment.API
 ```
 
 Restore dependencies:
@@ -95,9 +95,9 @@ Sensitive configuration values are managed through **environment variables**.
 
 Examples include:
 
-* Database connection string
-* JWT signing key
-* Admin seed credentials
+- Database connection string
+- JWT signing key
+- Admin seed credentials
 
 In production these values are stored securely in **Azure App Service configuration**.
 
@@ -121,7 +121,7 @@ This prevents secrets from being stored inside the repository.
 The backend follows a layered architecture separating controllers, business logic, and data access.
 
 ```
-ExamProject2.API
+ClinicAppointment.API
 │
 ├── Controllers
 ├── Services
@@ -164,9 +164,9 @@ Authentication is implemented using **JWT tokens**.
 
 Registered patients can log in and receive a token containing:
 
-* Patient ID
-* Email
-* Role claim
+- Patient ID
+- Email
+- Role claim
 
 Example authorization attribute:
 
@@ -193,18 +193,18 @@ The system enforces multiple validation rules to ensure realistic scheduling.
 
 The API prevents:
 
-* overlapping appointments for the same doctor
-* overlapping appointments for the same patient
-* bookings outside clinic working hours
-* past appointments
+- overlapping appointments for the same doctor
+- overlapping appointments for the same patient
+- bookings outside clinic working hours
+- past appointments
 
 ### Scheduling Rules
 
 Appointments must:
 
-* occur between **08:00 and 18:00**
-* avoid weekends
-* follow valid durations
+- occur between **08:00 and 18:00**
+- avoid weekends
+- follow valid durations
 
 Allowed durations:
 
@@ -230,9 +230,9 @@ Time slots align to:
 
 An endpoint is available to generate available booking slots based on:
 
-* clinic opening hours
-* selected duration
-* existing appointments
+- clinic opening hours
+- selected duration
+- existing appointments
 
 This assists the frontend in displaying available appointment times while keeping scheduling validation inside the backend.
 
@@ -242,9 +242,9 @@ This assists the frontend in displaying available appointment times while keepin
 
 A custom `GlobalExceptionMiddleware` provides:
 
-* consistent JSON error responses
-* centralized error handling
-* simplified controller logic
+- consistent JSON error responses
+- centralized error handling
+- simplified controller logic
 
 This ensures predictable API responses and improved debugging.
 
@@ -272,10 +272,10 @@ Server-side validation is implemented using **DataAnnotations** on DTO models.
 
 Examples include:
 
-* required fields
-* email format validation
-* appointment duration rules
-* registration validation
+- required fields
+- email format validation
+- appointment duration rules
+- registration validation
 
 This ensures data integrity before persistence.
 
@@ -309,16 +309,16 @@ The backend includes unit tests for core business logic implemented in the servi
 
 Testing is performed using:
 
-* **xUnit**
-* **Entity Framework Core InMemory database provider**
+- **xUnit**
+- **Entity Framework Core InMemory database provider**
 
 The InMemory provider allows tests to run without connecting to the real MySQL database.
 
 This enables fast and isolated validation of:
 
-* appointment scheduling logic
-* authentication behavior
-* business rules enforced in services
+- appointment scheduling logic
+- authentication behavior
+- business rules enforced in services
 
 Example tested service:
 
@@ -328,10 +328,10 @@ AppointmentService
 
 Tests validate rules such as:
 
-* preventing double bookings
-* preventing past appointments
-* enforcing clinic working hours
-* validating appointment duration
+- preventing double bookings
+- preventing past appointments
+- enforcing clinic working hours
+- validating appointment duration
 
 Run tests locally:
 
@@ -347,14 +347,14 @@ Tests are also executed automatically through **GitHub Actions CI/CD pipelines**
 
 The backend API provides:
 
-* RESTful clinic appointment scheduling system
-* guest and registered patient booking workflows
-* JWT authentication
-* role-based authorization
-* DTO-based API contracts
-* service-layer architecture
-* scheduling conflict validation
-* centralized error handling
-* Swagger API documentation
-* MySQL database using EF Core migrations
-* cloud deployment support for Azure
+- RESTful clinic appointment scheduling system
+- guest and registered patient booking workflows
+- JWT authentication
+- role-based authorization
+- DTO-based API contracts
+- service-layer architecture
+- scheduling conflict validation
+- centralized error handling
+- Swagger API documentation
+- MySQL database using EF Core migrations
+- cloud deployment support for Azure

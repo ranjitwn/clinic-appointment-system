@@ -25,9 +25,10 @@ The original brief required building a **full-stack clinic appointment booking s
 
 The exam project tested database design, API development, frontend functionality, documentation, and full-stack problem-solving. This public repository represents the **continued development of that original school project**, with additional work focused on deployment, architecture, documentation, testing, and overall portfolio quality.
 
-The implementation reflects the scope of the original exam requirements. 
+The implementation reflects the scope of the original exam requirements.
 In a real-world healthcare platform the system would typically include additional capabilities such as advanced patient data management, notification systems, and extended administrative roles.
 As development continues, the platform can be expanded with additional healthcare roles (e.g., doctors, nurses, reception staff), appointment reminders, calendar integrations, and enhanced search or reporting capabilities.
+
 ---
 
 # Live Application
@@ -125,7 +126,7 @@ The following ER diagram shows the full database structure and relationships.
 Root
 │
 ├── Backend
-│   └── ExamProject2.API
+│   └── ClinicAppointment.API
 │       └── README.md
 │
 ├── Frontend
@@ -145,45 +146,45 @@ Frontend → Frontend application documentation
 
 ## Backend
 
-* ASP.NET Core (.NET 9)
-* Entity Framework Core (Code-First)
-* MySQL Database
-* JWT Authentication
-* Role-Based Authorization
-* Swagger / OpenAPI
-* Global Exception Middleware
+- ASP.NET Core (.NET 9)
+- Entity Framework Core (Code-First)
+- MySQL Database
+- JWT Authentication
+- Role-Based Authorization
+- Swagger / OpenAPI
+- Global Exception Middleware
 
 ## Frontend
 
-* React 18
-* TypeScript
-* Vite
-* React Router
-* Fetch API
-* ESLint with strict TypeScript configuration
+- React 18
+- TypeScript
+- Vite
+- React Router
+- Fetch API
+- ESLint with strict TypeScript configuration
 
 ## Cloud & DevOps
 
-* Microsoft Azure App Service
-* Azure Static Web Apps
-* Azure Database for MySQL
-* GitHub Actions CI/CD
-* Custom domain configuration
+- Microsoft Azure App Service
+- Azure Static Web Apps
+- Azure Database for MySQL
+- GitHub Actions CI/CD
+- Custom domain configuration
 
 ---
 
 # Key Features
 
-* Patient registration and authentication using JWT
-* Guest appointment booking
-* Doctor search and filtering
-* Appointment scheduling with availability validation
-* Patient appointment management
-* Admin management of clinics, doctors, categories, and specialities
-* Secure REST API with role-based authorization
-* Global error handling middleware
-* Cloud deployment on Microsoft Azure
-* Automated CI/CD pipeline with GitHub Actions
+- Patient registration and authentication using JWT
+- Guest appointment booking
+- Doctor search and filtering
+- Appointment scheduling with availability validation
+- Patient appointment management
+- Admin management of clinics, doctors, categories, and specialities
+- Secure REST API with role-based authorization
+- Global error handling middleware
+- Cloud deployment on Microsoft Azure
+- Automated CI/CD pipeline with GitHub Actions
 
 ---
 
@@ -192,7 +193,7 @@ Frontend → Frontend application documentation
 ## Start Backend
 
 ```bash
-cd Backend/ExamProject2.API
+cd Backend/ClinicAppointment.API
 dotnet restore
 dotnet ef database update
 dotnet run
@@ -254,10 +255,10 @@ Continuous deployment is implemented using GitHub Actions.
 
 The pipeline performs:
 
-* Build ASP.NET Core backend
-* Deploy backend to Azure App Service
-* Build React frontend
-* Deploy frontend to Azure Static Web Apps
+- Build ASP.NET Core backend
+- Deploy backend to Azure App Service
+- Build React frontend
+- Deploy frontend to Azure Static Web Apps
 
 Deployment is triggered automatically when changes are pushed to the repository.
 
@@ -269,9 +270,9 @@ The backend includes automated unit tests to validate core business logic in the
 
 Testing is implemented using:
 
-* **xUnit testing framework**
-* **Entity Framework Core InMemory provider**
-* Isolated service-level tests without external dependencies
+- **xUnit testing framework**
+- **Entity Framework Core InMemory provider**
+- Isolated service-level tests without external dependencies
 
 This allows validation of scheduling rules and API logic without requiring a real database connection.
 
@@ -304,12 +305,12 @@ This ensures secure configuration management for production deployments.
 
 This project demonstrates:
 
-* Full-stack web application development
-* REST API design with ASP.NET Core
-* JWT authentication and role-based authorization
-* Entity Framework Core with MySQL
-* React + TypeScript frontend development
-* Cloud deployment on Microsoft Azure
-* CI/CD automation with GitHub Actions
-* Automated backend unit testing
-* Secure configuration using environment variables
+- Full-stack web application development
+- REST API design with ASP.NET Core
+- JWT authentication and role-based authorization
+- Entity Framework Core with MySQL
+- React + TypeScript frontend development
+- Cloud deployment on Microsoft Azure
+- CI/CD automation with GitHub Actions
+- Automated backend unit testing
+- Secure configuration using environment variables

@@ -1,8 +1,8 @@
 using System;
-using ExamProject2.API.Data;
-using ExamProject2.API.DTOs;
-using ExamProject2.API.Models;
-using ExamProject2.API.Services;
+using ClinicAppointment.API.Data;
+using ClinicAppointment.API.DTOs;
+using ClinicAppointment.API.Models;
+using ClinicAppointment.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
