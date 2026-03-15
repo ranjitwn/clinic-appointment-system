@@ -53,5 +53,4 @@ jobs:
           app-name: "clinic-booking-api-ranjit"
           slot-name: "Production"
           package: .
-
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F373665CC2A3436E8769760635CAAD1F }}
