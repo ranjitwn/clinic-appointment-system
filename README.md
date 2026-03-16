@@ -23,7 +23,7 @@ The original brief required building a **full-stack clinic appointment booking s
 - CRUD functionality, validation, and appointment conflict prevention
 - a doctor search feature returning the doctor’s **name, clinic, and speciality**
 
-The exam project tested database design, API development, frontend functionality, documentation, and full-stack problem-solving. This public repository represents the **continued development of that original school project**, with additional work focused on deployment, architecture, documentation, testing, and overall portfolio quality.
+The project tested database design, API development, frontend functionality, documentation, and full-stack problem-solving. This public repository represents the **continued development of that original school project**, with additional work focused on deployment, architecture, documentation, testing, and overall portfolio quality.
 
 The implementation reflects the scope of the original exam requirements.
 In a real-world healthcare platform the system would typically include additional capabilities such as advanced patient data management, notification systems, and extended administrative roles.
@@ -118,21 +118,6 @@ http://localhost:5173
 ```
 
 ⚠️ Ensure the backend API is running before starting the frontend.
-
----
-
-# Demo Access
-
-The administrator account is automatically seeded when the application starts.
-
-To explore the administrative functionality of the system you can log in using the demo administrator account:
-
-**Admin Email:** admin@clinic.com  
-**Admin Password:** Admin123!
-
-Admin credentials are provided for demonstration purposes only.
-
----
 
 ---
 
