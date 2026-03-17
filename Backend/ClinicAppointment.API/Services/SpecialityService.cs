@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClinicAppointment.API.Services
 {
-    public class SpecialityService
+    public class SpecialityService : ISpecialityService
     {
         private readonly DataContext _dataContext;
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import Button from "../../components/Button";
+import Spinner from "../../components/ui/Spinner";
 
 import { bookAppointment, getAvailableSlots } from "../../services/appointmentService";
 import { getClinics } from "../../services/clinicService";
@@ -303,7 +304,7 @@ export default function AppointmentForm({
 
         <div>
           <small>Available Time Slots</small>
-          {loadingSlots && <p>Loading slots...</p>}
+          {loadingSlots && <Spinner inline text="Fetching available slots…" />}
 
           <select
             value={selectedSlot}

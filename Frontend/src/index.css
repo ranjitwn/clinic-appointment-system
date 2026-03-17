@@ -1,87 +1,109 @@
-/* Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ── Healthcare Design System ───────────────────────────────── */
+:root {
+  --clr-primary:        #1565a8;
+  --clr-primary-dark:   #0d4f87;
+  --clr-primary-light:  #e8f2fb;
+  --clr-accent:         #0ea5a4;
+  --clr-accent-dark:    #0c8b8a;
+  --clr-danger:         #dc2626;
+  --clr-danger-dark:    #b91c1c;
+  --clr-bg:             #f0f4f8;
+  --clr-surface:        #ffffff;
+  --clr-border:         #dde3ec;
+  --clr-text:           #1a2332;
+  --clr-muted:          #64748b;
+  --radius-sm:          6px;
+  --radius-md:          10px;
+  --radius-lg:          14px;
+  --shadow-sm:          0 1px 3px rgba(0,0,0,.06), 0 1px 8px rgba(0,0,0,.04);
+  --shadow-md:          0 2px 8px rgba(0,0,0,.07), 0 4px 20px rgba(0,0,0,.06);
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #ffffff;
-  color: #1f2933;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Helvetica, Arial, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Layout wrapper (Layout.tsx) */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+/* ── Layout ─────────────────────────────────────────────────── */
+.app-container { display: flex; flex-direction: column; min-height: 100vh; }
+.main-content  { flex: 1; padding: 2rem 1.5rem; }
+main           { width: 100%; }
 
-.main-content {
-  flex: 1;
-  padding: 2rem;
-}
-
-main {
-  width: 100%;
-}
-
-/* Page titles */
-
+/* ── Typography ─────────────────────────────────────────────── */
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  letter-spacing: -0.01em;
 }
+h2 { font-size: 1.15rem; font-weight: 600; color: var(--clr-text); }
+h3 { font-size: 1rem;    font-weight: 600; }
 
+/* ── Page container ─────────────────────────────────────────── */
 .page-container {
   max-width: 900px;
-  margin: 20px auto;
-  padding: 1rem 2rem 2rem 2rem;
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+}
+.page-container h1 { margin-bottom: 1.25rem; }
+
+/* ── Field labels (small used as label) ─────────────────────── */
+small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--clr-muted);
+  margin-bottom: 5px;
 }
 
-.page-container h1 {
-  margin-bottom: 1rem;
-}
-
-/* Cards */
-
-.card form {
-  width: 100%;
-}
-
-.card h1 {
-  text-align: center;
-}
-
-.card {
-  scroll-margin-top: 80px;
-}
-
-/* Inputs */
-
+/* ── Inputs & Selects ───────────────────────────────────────── */
 input,
 select {
   width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #d1e5e5;
+  padding: 0.72rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--clr-border);
   font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--clr-text);
+  background: var(--clr-surface);
+  transition: border-color .15s, box-shadow .15s;
 }
 
-/* Accessibility */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
 
+input::placeholder { color: #a0aec0; }
+input:hover, select:hover { border-color: #b0bdd0; }
+
+/* ── Focus ──────────────────────────────────────────────────── */
 input:focus,
-select:focus,
-button:focus {
-  outline: 2px solid #0ea5a4;
-  outline-offset: 1px;
+select:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(21, 101, 168, .12);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
 }

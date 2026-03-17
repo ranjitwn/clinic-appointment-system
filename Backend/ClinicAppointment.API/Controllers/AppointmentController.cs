@@ -11,9 +11,9 @@ namespace ClinicAppointment.API.Controllers
     [Produces("application/json")]
     public class AppointmentController : ControllerBase
     {
-        private readonly AppointmentService _appointmentService;
+        private readonly IAppointmentService _appointmentService;
 
-        public AppointmentController(AppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService)
         {
             _appointmentService = appointmentService;
 
@@ -67,9 +67,9 @@ namespace ClinicAppointment.API.Controllers
             {
                 var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (!string.IsNullOrEmpty(claim))
+                if (int.TryParse(claim, out var parsedId))
                 {
-                    patientId = int.Parse(claim);
+                    patientId = parsedId;
                 }
             }
 
@@ -98,7 +98,8 @@ namespace ClinicAppointment.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetMyAppointments()
         {
-            var patientId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var patientId))
+                return Unauthorized();
 
             var appointments = await _appointmentService.GetMyAppointmentsAsync(patientId);
 
@@ -133,12 +134,8 @@ namespace ClinicAppointment.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateAppointment(int id, AppointmentUpdateDto dto)
         {
-            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(claim))
+            if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var patientId))
                 return Unauthorized();
-
-            var patientId = int.Parse(claim);
 
             var errorMessage = await _appointmentService.UpdateAppointmentAsync(id, patientId, dto);
 
@@ -164,12 +161,8 @@ namespace ClinicAppointment.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
-            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(claim))
+            if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var patientId))
                 return Unauthorized();
-
-            var patientId = int.Parse(claim);
 
             var success = await _appointmentService.DeleteAppointmentAsync(id, patientId);
 

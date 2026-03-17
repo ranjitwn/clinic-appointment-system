@@ -9,7 +9,6 @@ using System.Reflection;
 using ClinicAppointment.API.Services;
 using ClinicAppointment.API.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 
 
@@ -85,7 +84,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -119,19 +118,19 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<AppointmentService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
-builder.Services.AddScoped<DoctorService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
 
-builder.Services.AddScoped<ClinicService>();
+builder.Services.AddScoped<IClinicService, ClinicService>();
 
-builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddScoped<SpecialityService>();
+builder.Services.AddScoped<ISpecialityService, SpecialityService>();
 
 
 

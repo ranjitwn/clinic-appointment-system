@@ -10,9 +10,9 @@ namespace ClinicAppointment.API.Controllers
     [Produces("application/json")]
     public class DoctorController : ControllerBase
     {
-        private readonly DoctorService _doctorService;
+        private readonly IDoctorService _doctorService;
 
-        public DoctorController(DoctorService doctorService)
+        public DoctorController(IDoctorService doctorService)
         {
             _doctorService = doctorService;
         }

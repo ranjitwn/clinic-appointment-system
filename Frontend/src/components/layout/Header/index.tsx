@@ -15,11 +15,14 @@ export default function Header() {
 
   return (
     <header>
-      <h2>Clinic Booking System</h2>
+      <div className="header-brand">
+        <span className="header-icon">✚</span>
+        <span className="header-title">ClinicCare</span>
+      </div>
 
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/search">Search Doctors</Link>
+      <nav className="header-nav">
+        <Link to="/">Book Appointment</Link>
+        <Link to="/search">Find a Doctor</Link>
 
         {!isLoggedIn && (
           <>

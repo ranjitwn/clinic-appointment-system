@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import Button from "../../components/Button";
+import EmptyState from "../../components/ui/EmptyState";
+import Spinner from "../../components/ui/Spinner";
 
 import {getAppointmentsByClinic, getAppointmentsByDoctor,} from "../../services/appointmentService";
 import {getClinics, createClinic, updateClinic, deleteClinic,} from "../../services/clinicService";
@@ -518,7 +520,7 @@ export default function AdminPage({
     });
   }
 
-  if (loadingLookups) return <p>Loading admin page...</p>;
+  if (loadingLookups) return <Spinner text="Loading admin dashboard…" />;
 
   return (
     <main>
@@ -527,13 +529,12 @@ export default function AdminPage({
         {saving && <p>Processing...</p>}
 
         <div className="card">
-          <h2>Admin Menu</h2>
-          <div className="card-actions">
-            <Button type="button" onClick={() => { setActiveTab("appointments"); }}>Appointments</Button>
-            <Button type="button" onClick={() => {setActiveTab("clinics");}}>Clinics</Button>
-            <Button type="button" onClick={() => {setActiveTab("categories");}}>Categories</Button>
-            <Button type="button" onClick={() => {setActiveTab("specialities");}}>Specialities</Button>
-            <Button type="button" onClick={() => {setActiveTab("doctors");}}>Doctors</Button>
+          <div className="tab-bar">
+            <Button type="button" className={`tab-btn${activeTab === "appointments" ? " tab-active" : ""}`} onClick={() => { setActiveTab("appointments"); }}>Appointments</Button>
+            <Button type="button" className={`tab-btn${activeTab === "clinics" ? " tab-active" : ""}`} onClick={() => { setActiveTab("clinics"); }}>Clinics</Button>
+            <Button type="button" className={`tab-btn${activeTab === "categories" ? " tab-active" : ""}`} onClick={() => { setActiveTab("categories"); }}>Categories</Button>
+            <Button type="button" className={`tab-btn${activeTab === "specialities" ? " tab-active" : ""}`} onClick={() => { setActiveTab("specialities"); }}>Specialities</Button>
+            <Button type="button" className={`tab-btn${activeTab === "doctors" ? " tab-active" : ""}`} onClick={() => { setActiveTab("doctors"); }}>Doctors</Button>
           </div>
         </div>
 
@@ -626,12 +627,24 @@ export default function AdminPage({
                 Load Appointments
               </Button>
 
-                {loadingAppointments && <p>Loading appointments...</p>}
+                {loadingAppointments && <Spinner inline text="Loading appointments…" />}
               </div>
             </div>
 
             {appointments.length === 0 && !loadingAppointments && (
-              <p className="no-appointments">No appointments loaded. Please select a filter and click "Load Appointments".</p>
+              <EmptyState
+                icon={
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="8" y1="14" x2="16" y2="14"/>
+                  </svg>
+                }
+                title="No appointments to display"
+                message="Select a filter above and click Load Appointments."
+              />
             )}
 
             {appointments.map((a) => (
@@ -664,7 +677,7 @@ export default function AdminPage({
             <div className="card">
               <h2>Manage Clinics</h2>
 
-              <div className="form-group">
+              <div className="form-row">
                 <input
                   placeholder="Clinic name"
                   value={newClinicName}
@@ -717,13 +730,13 @@ export default function AdminPage({
             <div className="card">
               <h2>Manage Categories</h2>
 
-              <div className="form-group">
+              <div className="form-row">
                 <input
                   placeholder="Category name"
                   value={newCategoryName}
                   onChange={(e) => { setNewCategoryName(e.target.value); }}
                 />
-                <Button type="button" onClick={() => { void handleCreateCategory(); }}> Save </Button>
+                <Button type="button" onClick={() => { void handleCreateCategory(); }}>Add Category</Button>
               </div>
             </div>
 
@@ -769,7 +782,7 @@ export default function AdminPage({
             <div className="card">
               <h2>Manage Specialities</h2>
 
-              <div className="form-group">
+              <div className="form-row">
                 <input
                   placeholder="Speciality name"
                   value={newSpecialityName}
@@ -951,7 +964,9 @@ export default function AdminPage({
                     </p>
                     <p>
                       <small>
-                        ClinicId: {d.clinicId} | SpecialityId: {d.specialityId }
+                        {clinics.find((c) => c.id === d.clinicId)?.name ?? `Clinic #${d.clinicId}`}
+                        {" · "}
+                        {specialities.find((s) => s.id === d.specialityId)?.name ?? `Speciality #${d.specialityId}`}
                       </small>
                     </p>
 

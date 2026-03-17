@@ -6,13 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace ClinicAppointment.API.Services
 {
-    public class AppointmentService
+    public class AppointmentService : IAppointmentService
     {
+        private const int ClinicOpeningHour = 8;
+        private const int ClinicClosingHour = 18;
+
         private readonly DataContext _dataContext;
-        private readonly PatientService _patientService;
+        private readonly IPatientService _patientService;
         private readonly ILogger<AppointmentService> _logger;
 
-        public AppointmentService(DataContext dataContext, PatientService patientService, ILogger<AppointmentService> logger)
+        public AppointmentService(DataContext dataContext, IPatientService patientService, ILogger<AppointmentService> logger)
         {
             _dataContext = dataContext;
             _patientService = patientService;
@@ -141,8 +144,8 @@ namespace ClinicAppointment.API.Services
             // Restrict clinic hours (08:00–18:00)
             var appointmentTime = dto.AppointmentDate.TimeOfDay;
 
-            if (appointmentTime < TimeSpan.FromHours(8) ||
-                appointmentTime >= TimeSpan.FromHours(18))
+            if (appointmentTime < TimeSpan.FromHours(ClinicOpeningHour) ||
+                appointmentTime >= TimeSpan.FromHours(ClinicClosingHour))
             {
                 return "Appointments can only be booked between 08:00 and 18:00.";
             }
@@ -150,7 +153,7 @@ namespace ClinicAppointment.API.Services
             // Ensure appointment finishes within clinic hours
             var appointmentEndTime = dto.AppointmentDate.AddMinutes(duration).TimeOfDay;
 
-            if (appointmentEndTime > TimeSpan.FromHours(18))
+            if (appointmentEndTime > TimeSpan.FromHours(ClinicClosingHour))
             {
                 return "Appointment exceeds clinic hours.";
             }
@@ -258,8 +261,8 @@ namespace ClinicAppointment.API.Services
             // Restrict clinic hours (08:00–18:00)
             var appointmentTime = dto.AppointmentDate.TimeOfDay;
 
-            if (appointmentTime < TimeSpan.FromHours(8) ||
-                appointmentTime >= TimeSpan.FromHours(18))
+            if (appointmentTime < TimeSpan.FromHours(ClinicOpeningHour) ||
+                appointmentTime >= TimeSpan.FromHours(ClinicClosingHour))
                 return "Appointments can only be booked between 08:00 and 18:00";
 
             // Allow only 15-minute intervals
@@ -378,8 +381,8 @@ namespace ClinicAppointment.API.Services
                 return new List<DateTime>();
             }
 
-            var clinicStart = date.Date.AddHours(8);
-            var clinicEnd = date.Date.AddHours(18);
+            var clinicStart = date.Date.AddHours(ClinicOpeningHour);
+            var clinicEnd = date.Date.AddHours(ClinicClosingHour);
 
             var existingAppointments = await _dataContext.Appointments
                 .Where(a => a.DoctorId == doctorId &&

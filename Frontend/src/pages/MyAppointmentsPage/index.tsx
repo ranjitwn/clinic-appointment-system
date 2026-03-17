@@ -3,6 +3,8 @@ import { getMyAppointments, deleteAppointment, updateAppointment, getAvailableSl
 
 import AppointmentCard from "../../components/appointments/AppointmentCard";
 import Button from "../../components/Button";
+import EmptyState from "../../components/ui/EmptyState";
+import Spinner from "../../components/ui/Spinner";
 import type { AppointmentDTO } from "../../types/AppointmentDTO";
 
 interface Props {
@@ -147,7 +149,7 @@ export default function MyAppointmentsPage({
     }
   } 
 
-  if (loading) return <p>Loading appointments...</p>;
+  if (loading) return <Spinner text="Loading your appointments…" />;
   if (error) return <p>{error}</p>;
 
   return (
@@ -155,7 +157,20 @@ export default function MyAppointmentsPage({
       <div className="page-container">
         <h1>My Appointments</h1>
 
-        {appointments.length === 0 && <p className="no-appointments"> No appointments found.</p>}
+        {appointments.length === 0 && (
+          <EmptyState
+            icon={
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            }
+            title="No upcoming appointments"
+            message="You have no appointments booked. Use the home page to schedule your next visit."
+          />
+        )}
 
         {appointments.map((a) => (
           <div key={a.id}>
@@ -167,7 +182,7 @@ export default function MyAppointmentsPage({
 
             {editingId === a.id && (
               <div className="card">
-                {loadingSlots && <p>Loading available slots...</p>}
+                {loadingSlots && <Spinner inline text="Fetching available slots…" />}
                 <input
                   type="date"
                   value={newDate}

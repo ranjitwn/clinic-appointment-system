@@ -9,9 +9,9 @@ namespace ClinicAppointment.API.Controllers
     [Produces("application/json")]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ClinicAppointment.API.Services
 {
-    public class PatientService
+    public class PatientService : IPatientService
     {
         private readonly DataContext _dataContext;
         private readonly ILogger<PatientService> _logger;

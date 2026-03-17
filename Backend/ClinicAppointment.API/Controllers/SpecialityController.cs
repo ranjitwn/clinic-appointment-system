@@ -11,9 +11,9 @@ namespace ClinicAppointment.API.Controllers
     [Produces("application/json")]
     public class SpecialityController : ControllerBase
     {
-        private readonly SpecialityService _specialityService;
+        private readonly ISpecialityService _specialityService;
 
-        public SpecialityController(SpecialityService specialityService)
+        public SpecialityController(ISpecialityService specialityService)
         {
             _specialityService = specialityService;
         }

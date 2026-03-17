@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { searchDoctors } from "../../services/doctorService";
 import type { DoctorSearchDTO } from "../../types/DoctorSearchDTO";
 import DoctorCard from "../../components/DoctorCard";
+import EmptyState from "../../components/ui/EmptyState";
+import Spinner from "../../components/ui/Spinner";
 
 export default function SearchDoctorPage() {
   const [query, setQuery] = useState("");
@@ -55,13 +57,21 @@ export default function SearchDoctorPage() {
             />
           </div>
 
-          {loading && <p>Searching...</p>}
+          {loading && <Spinner inline text="Searching…" />}
           {error && <p>{error}</p>}
 
           {!loading && query && doctors.length === 0 && !error && (
-            <p className="no-appointments">
-              No doctors found for your search.
-            </p>
+            <EmptyState
+              icon={
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+              }
+              title="No doctors found"
+              message={`No results for "${query}". Try a different name.`}
+            />
           )}
 
           <div className="search-results">

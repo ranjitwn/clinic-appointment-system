@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ClinicAppointment.API.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly DataContext _dataContext;
         private readonly JwtSettings _jwtSettings;
