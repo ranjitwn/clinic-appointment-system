@@ -90,6 +90,48 @@ namespace ClinicAppointment.API.Services
             // Checking patient exists and is registered
             if (patient == null || !patient.IsRegistered)
             {
+                // Fall back to Users table (admin accounts)
+                var user = await _dataContext.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == dto.Email.ToLower());
+
+                if (user != null)
+                {
+                    var userHasher = new PasswordHasher<User>();
+                    var userResult = userHasher.VerifyHashedPassword(user, user.Password, dto.Password);
+
+                    if (userResult == PasswordVerificationResult.Failed)
+                    {
+                        _logger.LogWarning("Login failed for admin email {Email}: invalid password", dto.Email);
+                        return null;
+                    }
+
+                    _logger.LogInformation("Admin login successful for user {UserId}", user.Id);
+
+                    var userClaims = new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, user.Role)
+                    };
+
+                    var userKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+                    var userCreds = new SigningCredentials(userKey, SecurityAlgorithms.HmacSha256);
+
+                    var userToken = new JwtSecurityToken(
+                        issuer: _jwtSettings.Issuer,
+                        audience: _jwtSettings.Audience,
+                        claims: userClaims,
+                        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+                        signingCredentials: userCreds
+                    );
+
+                    return new AuthLoginResultDto
+                    {
+                        Token = new JwtSecurityTokenHandler().WriteToken(userToken),
+                        Role = user.Role
+                    };
+                }
+
                 _logger.LogWarning("Login failed for email {Email}: patient not found or not registered", dto.Email);
                 return null;
             }

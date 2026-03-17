@@ -16,6 +16,7 @@ namespace ClinicAppointment.API.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +49,10 @@ namespace ClinicAppointment.API.Data
                 .HasMany(c => c.Appointments)
                 .WithOne(a => a.Clinic)
                 .HasForeignKey(a => a.ClinicId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
 
     }

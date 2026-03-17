@@ -169,10 +169,10 @@ namespace ClinicAppointment.API.Services
 
             var newEndTime = dto.AppointmentDate.AddMinutes(duration);
 
-            // DOCTOR SLOT CONFLICT 
+            // DOCTOR SLOT CONFLICT
+            // ClinicId check omitted: DoctorId already implies a single clinic (validated above)
             var slotConflict = await _dataContext.Appointments.AnyAsync(a =>
                 a.DoctorId == dto.DoctorId &&
-                a.ClinicId == dto.ClinicId &&
                 dto.AppointmentDate < a.AppointmentDate.AddMinutes(a.DurationMinutes) &&
                 newEndTime > a.AppointmentDate
             );
@@ -275,10 +275,10 @@ namespace ClinicAppointment.API.Services
             var newEndTime = dto.AppointmentDate.AddMinutes(dto.DurationMinutes);
 
             // Prevent doctor slot conflict when updating
+            // ClinicId check omitted: DoctorId already implies a single clinic
             var slotConflict = await _dataContext.Appointments.AnyAsync(a =>
                 a.Id != id &&
                 a.DoctorId == appointment.DoctorId &&
-                a.ClinicId == appointment.ClinicId &&
                 dto.AppointmentDate < a.AppointmentDate.AddMinutes(a.DurationMinutes) &&
                 newEndTime > a.AppointmentDate
             );

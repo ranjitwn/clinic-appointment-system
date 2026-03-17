@@ -144,7 +144,7 @@ var forwardOptions = new ForwardedHeadersOptions
 
 app.UseForwardedHeaders(forwardOptions);
 
-// Seed Admin User 
+// Seed Admin User
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<DataContext>();
@@ -154,23 +154,19 @@ using (var scope = app.Services.CreateScope())
 
     if (!string.IsNullOrWhiteSpace(adminEmail) &&
         !string.IsNullOrWhiteSpace(adminPassword) &&
-        !context.Patients.Any(p => p.Role == "Admin"))
+        !context.Users.Any(u => u.Role == "Admin"))
     {
-        var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<Patient>();
+        var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
 
-        var admin = new Patient
+        var admin = new User
         {
-            FirstName = "Admin",
-            LastName = "User",
             Email = adminEmail,
-            DateOfBirth = new DateTime(2000, 1, 1),
-            IsRegistered = true,
             Role = "Admin"
         };
 
         admin.Password = hasher.HashPassword(admin, adminPassword);
 
-        context.Patients.Add(admin);
+        context.Users.Add(admin);
         context.SaveChanges();
     }
 }
