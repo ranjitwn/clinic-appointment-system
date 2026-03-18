@@ -64,7 +64,7 @@ namespace ClinicAppointment.API.Controllers
         {
             int? patientId = null;
 
-            if (User.Identity?.IsAuthenticated == true)
+            if (User.IsInRole(Roles.Patient))
             {
                 var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

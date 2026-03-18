@@ -148,27 +148,36 @@ app.UseForwardedHeaders(forwardOptions);
 // Seed Admin User
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    var seedLogger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-    var adminEmail = builder.Configuration["SeedAdmin:Email"];
-    var adminPassword = builder.Configuration["SeedAdmin:Password"];
-
-    if (!string.IsNullOrWhiteSpace(adminEmail) &&
-        !string.IsNullOrWhiteSpace(adminPassword) &&
-        !context.Users.Any(u => u.Role == Roles.Admin))
+    try
     {
-        var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-        var admin = new User
+        var adminEmail = builder.Configuration["SeedAdmin:Email"];
+        var adminPassword = builder.Configuration["SeedAdmin:Password"];
+
+        if (!string.IsNullOrWhiteSpace(adminEmail) &&
+            !string.IsNullOrWhiteSpace(adminPassword) &&
+            !context.Users.Any(u => u.Role == Roles.Admin))
         {
-            Email = adminEmail,
-            Role = Roles.Admin
-        };
+            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
 
-        admin.Password = hasher.HashPassword(admin, adminPassword);
+            var admin = new User
+            {
+                Email = adminEmail,
+                Role = Roles.Admin
+            };
 
-        context.Users.Add(admin);
-        context.SaveChanges();
+            admin.Password = hasher.HashPassword(admin, adminPassword);
+
+            context.Users.Add(admin);
+            context.SaveChanges();
+        }
+    }
+    catch (Exception ex)
+    {
+        seedLogger.LogError(ex, "Admin seeding failed. Ensure the database migration has been applied.");
     }
 }
 

@@ -31,13 +31,13 @@ namespace ClinicAppointment.API.Services
                 DurationMinutes = a.DurationMinutes,
 
                 ClinicId = a.ClinicId,
-                ClinicName = a.Clinic!.Name,
+                ClinicName = a.Clinic?.Name ?? "",
 
                 DoctorId = a.DoctorId,
-                DoctorName = a.Doctor!.FirstName + " " + a.Doctor!.LastName,
+                DoctorName = a.Doctor != null ? a.Doctor.FirstName + " " + a.Doctor.LastName : "",
 
                 CategoryId = a.CategoryId,
-                CategoryName = a.Category!.Name,
+                CategoryName = a.Category?.Name ?? "",
 
                 PatientId = a.PatientId
             };
