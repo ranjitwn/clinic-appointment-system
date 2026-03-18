@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
 using ClinicAppointment.API.Services;
@@ -37,7 +38,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="201">Clinic created successfully</response>
         /// <response code="400">If the request data is invalid</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -76,7 +77,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Clinic updated successfully</response>
         /// <response code="400">If update fails due to duplicate name or clinic not found.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -99,7 +100,7 @@ namespace ClinicAppointment.API.Controllers
         /// <response code="200">Clinic deleted successfully</response>
         /// <response code="404">If the clinic is not found</response>
         /// <response code="409">If the clinic has related doctors or appointments and cannot be deleted</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

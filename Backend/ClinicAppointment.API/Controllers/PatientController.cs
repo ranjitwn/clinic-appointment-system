@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
 using ClinicAppointment.API.Services;
@@ -25,7 +26,7 @@ namespace ClinicAppointment.API.Controllers
         /// This endpoint is mainly intended for administrative or internal use.
         /// </remarks>
         /// <response code="200">Returns the list of patients</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients()
@@ -43,7 +44,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="201">Patient created successfully</response>
         /// <response code="400">If the request data is invalid</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,7 +63,7 @@ namespace ClinicAppointment.API.Controllers
         /// </summary>
         /// <response code="200">Returns the patient</response>
         /// <response code="404">If the patient is not found</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,7 +85,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Patient updated successfully</response>
         /// <response code="404">If the patient is not found</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,7 +108,7 @@ namespace ClinicAppointment.API.Controllers
         /// <response code="200">Patient deleted successfully</response>
         /// <response code="404">If the patient is not found</response>
         /// <response code="409">If the patient has related appointments and cannot be deleted</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

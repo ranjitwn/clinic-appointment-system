@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -36,7 +37,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="201">Doctor created successfully</response>
         /// <response code="400">If the request data is invalid</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -115,7 +116,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Doctor updated successfully</response>
         /// <response code="400">If the doctor is not found</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -137,7 +138,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Doctor deleted successfully</response>
         /// <response code="400">If deletion fails because doctor has appointments or is not found.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

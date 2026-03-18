@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using ClinicAppointment.API.Services;
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.Middleware;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -154,14 +155,14 @@ using (var scope = app.Services.CreateScope())
 
     if (!string.IsNullOrWhiteSpace(adminEmail) &&
         !string.IsNullOrWhiteSpace(adminPassword) &&
-        !context.Users.Any(u => u.Role == "Admin"))
+        !context.Users.Any(u => u.Role == Roles.Admin))
     {
         var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<User>();
 
         var admin = new User
         {
             Email = adminEmail,
-            Role = "Admin"
+            Role = Roles.Admin
         };
 
         admin.Password = hasher.HashPassword(admin, adminPassword);

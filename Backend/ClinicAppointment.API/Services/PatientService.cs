@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.Data;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
@@ -84,7 +85,7 @@ namespace ClinicAppointment.API.Services
                 DateOfBirth = dto.DateOfBirth,
                 Gender = dto.Gender,
                 IsRegistered = false,
-                Role = "Patient"
+                Role = Roles.Patient
             };
 
             _dataContext.Patients.Add(patient);

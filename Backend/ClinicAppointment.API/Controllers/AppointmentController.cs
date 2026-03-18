@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -92,7 +93,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Returns the list of the patient's appointments</response>
         /// <response code="401">If the user is not authenticated</response>
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [HttpGet("my")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -127,7 +128,7 @@ namespace ClinicAppointment.API.Controllers
         /// <response code="200">Appointment updated successfully</response>
         /// <response code="401">If the user is not authenticated</response>
         /// <response code="400"> If update fails due to validation, conflict, or appointment not found. </response>
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -154,7 +155,7 @@ namespace ClinicAppointment.API.Controllers
         /// <response code="200">Appointment deleted successfully</response>
         /// <response code="401">If the user is not authenticated</response>
         /// <response code="404">If the appointment does not exist or does not belong to the patient</response>
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -181,7 +182,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Returns the list of appointments for the specified clinic</response>
         /// <response code="401">If the user is not authenticated</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("clinic/{clinicId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -201,7 +202,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Returns the list of appointments for the specified doctor</response>
         /// <response code="401">If the user is not authenticated</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("doctor/{doctorId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

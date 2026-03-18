@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
 using ClinicAppointment.API.Services;
@@ -37,7 +38,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="201">Category created successfully</response>
         /// <response code="400">If the request data is invalid</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,7 +78,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Category updated successfully</response>
         /// <response code="400">If update fails due to duplicate name or category not found.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,7 +102,7 @@ namespace ClinicAppointment.API.Controllers
         /// <response code="200">Category deleted successfully</response>
         /// <response code="404">If the category is not found</response>
         /// <response code="409">If the category is used in appointments and cannot be deleted</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

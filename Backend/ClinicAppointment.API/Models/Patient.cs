@@ -1,3 +1,5 @@
+using ClinicAppointment.API.Constants;
+
 namespace ClinicAppointment.API.Models
 {
     public class Patient
@@ -11,7 +13,7 @@ namespace ClinicAppointment.API.Models
         public string? Password { get; set; } // Patient-based authentication (null = guest, set = registered)
 
         // Role field for authorization
-        public required string Role { get; set; } = "Patient";
+        public required string Role { get; set; } = Roles.Patient;
 
         // Optional field for registered patients
 

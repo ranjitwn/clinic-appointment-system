@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.Data;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
@@ -66,7 +67,7 @@ namespace ClinicAppointment.API.Services
                 Email = dto.Email,
                 DateOfBirth = dto.DateOfBirth,
                 IsRegistered = true,
-                Role = "Patient"
+                Role = Roles.Patient
             };
 
             patient.Password = hasher.HashPassword(patient, dto.Password);

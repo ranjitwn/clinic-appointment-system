@@ -1,3 +1,4 @@
+using ClinicAppointment.API.Constants;
 using ClinicAppointment.API.DTOs;
 using ClinicAppointment.API.Models;
 using ClinicAppointment.API.Services;
@@ -42,7 +43,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="201">Speciality created successfully</response>
         /// <response code="400">If the request data is invalid</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,7 +84,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Speciality updated successfully</response>
         /// <response code="400">If update fails due to duplicate name or speciality not found.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -105,7 +106,7 @@ namespace ClinicAppointment.API.Controllers
         /// </remarks>
         /// <response code="200">Speciality deleted successfully</response>
         /// <response code="400">If deletion fails because speciality is in use or not found.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
