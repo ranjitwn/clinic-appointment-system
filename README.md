@@ -1,86 +1,168 @@
 # Clinic Appointment Booking System
 
-A full-stack clinic appointment booking platform built with **ASP.NET Core Web API (.NET 9)** and **React + TypeScript**, deployed on **Microsoft Azure** with automated **CI/CD using GitHub Actions**.
+A full-stack clinic appointment booking platform built with **ASP.NET Core (.NET 9)** and **React + TypeScript**, deployed on **Microsoft Azure** with automated CI/CD via GitHub Actions.
 
-The project demonstrates a modern cloud-hosted application architecture including REST API design, authentication, database integration, and frontend-backend communication.
-
-The system allows patients to search for doctors, book appointments, manage bookings, and provides administrative functionality for managing clinics, doctors, and medical categories.
-
----
-
-# Project Background
-
-This project was originally developed as part of the **Noroff Backend Development program**.
-
-The original brief required building a **full-stack clinic appointment booking system** with:
-
-- a **MySQL database** designed using **Entity Framework Core Code-First**
-- an **ASP.NET Core REST API**
-- a **React + TypeScript frontend**
-- **Swagger API documentation**
-- support for both **guest users** and **registered patients**
-- **authentication** for registered users
-- CRUD functionality, validation, and appointment conflict prevention
-- a doctor search feature returning the doctor’s **name, clinic, and speciality**
-
-The project tested database design, API development, frontend functionality, documentation, and full-stack problem-solving. This public repository represents the **continued development of that original school project**, with additional work focused on deployment, architecture, documentation, testing, and overall portfolio quality.
-
-The implementation reflects the scope of the original exam requirements.
-In a real-world healthcare platform the system would typically include additional capabilities such as advanced patient data management, notification systems, and extended administrative roles.
-As development continues, the platform can be expanded with additional healthcare roles (e.g., doctors, nurses, reception staff), appointment reminders, calendar integrations, and enhanced search or reporting capabilities.
+**Live application:** [app.ranjitnair.dev](https://app.ranjitnair.dev)
+**API:** [api.ranjitnair.dev](https://api.ranjitnair.dev)
+**Swagger docs:** [api.ranjitnair.dev/doc](https://api.ranjitnair.dev/doc)
+**Health check:** [api.ranjitnair.dev/health](https://api.ranjitnair.dev/health)
 
 ---
 
-# Live Application
+## Overview
 
-Frontend
-https://app.ranjitnair.dev
+The platform supports two user types — **patients** and **admins** — each with separate authentication flows and access controls.
 
-Backend API
-https://api.ranjitnair.dev
+Patients can register, search for doctors, book appointments with real-time slot availability, reschedule, and cancel. Guest booking is also supported without registration. Admins manage clinics, doctors, categories, and specialities through a dedicated dashboard.
 
-Swagger API Documentation
-https://api.ranjitnair.dev/doc
-
-Health Check
-https://api.ranjitnair.dev/health
+Originally developed as part of a backend development program, the project has since been extended with production-quality improvements across architecture, testing, security, error handling, and UI/UX.
 
 ---
 
-# Quick Start (Local Development)
+## Highlights
 
-Clone the repository:
+- Secure JWT authentication with role-based authorization
+- EF Core Code-First with Azure MySQL
+- Full CI/CD pipeline using GitHub Actions
+- Cloud deployment on Microsoft Azure
+
+---
+
+## Key Improvements (Beyond Original Exam)
+
+These improvements were made after the initial submission to bring the project closer to production quality:
+
+- **Service interfaces** — All services depend on interfaces (`IAppointmentService`, `IDoctorService`, etc.), following the Dependency Inversion Principle and enabling clean unit testing
+- **Separate User entity for admins** — Admins are stored in a dedicated `Users` table instead of the `Patients` table, improving database design without breaking existing API behaviour
+- **Defensive controller parsing** — Replaced `int.Parse` with `int.TryParse` throughout all controllers, eliminating potential runtime exceptions from malformed claims
+- **Named constants for business rules** — Clinic opening hours extracted into `private const int` fields in `AppointmentService`, removing magic numbers
+- **Unit tests for conflict detection** — xUnit tests covering doctor slot conflicts, patient double-booking, and boundary conditions (e.g. adjacent slots that should not block each other)
+- **Centralised frontend error handling** — All API calls go through a shared `fetchJson` wrapper that returns user-friendly messages for network failures, non-JSON responses, and HTTP error codes (401, 403, 500+)
+- **Professional UI redesign** — Complete CSS rewrite using design tokens (custom properties), clean healthcare colour palette, consistent component library including loading spinners, empty states, and toast notifications
+- **Redundant query cleanup** — Removed a redundant `ClinicId` filter from doctor conflict queries, since `DoctorId` already implies a single clinic by foreign key constraint
+
+---
+
+## Features
+
+- JWT authentication with role-based authorization (`Patient`, `Admin`)
+- Guest appointment booking without registration
+- Doctor search with clinic and speciality information
+- Real-time slot availability based on clinic hours and existing bookings
+- Appointment conflict prevention (doctor and patient level)
+- Patient appointment management (book, reschedule, cancel)
+- Admin dashboard for managing clinics, doctors, categories, and specialities
+- Global exception middleware with structured request logging
+- Health check endpoint
+- Swagger / OpenAPI documentation with XML comments
+
+---
+
+## Tech Stack
+
+### Backend
+- ASP.NET Core Web API (.NET 9)
+- Entity Framework Core — Code-First migrations
+- MySQL (Azure Database for MySQL)
+- JWT Bearer authentication
+- xUnit + EF Core InMemory (unit testing)
+- Swagger / Swashbuckle
+
+### Frontend
+- React 18 + TypeScript
+- Vite
+- React Router v6
+- Fetch API with centralised error handling
+- ESLint (strict TypeScript configuration)
+
+### Cloud & DevOps
+- Azure App Service (backend)
+- Azure Static Web Apps (frontend)
+- Azure Database for MySQL
+- GitHub Actions (CI/CD)
+- Custom domain via Namecheap DNS
+
+---
+
+## Architecture
+
+The application follows a standard three-layer architecture:
+
+| Layer | Technology |
+|---|---|
+| Client | React + TypeScript (Azure Static Web Apps) |
+| API | ASP.NET Core Web API (Azure App Service) |
+| Data | MySQL via EF Core (Azure Database for MySQL) |
+
+Frontend communicates with the backend over HTTPS REST APIs with JSON responses. Sensitive configuration (connection strings, JWT keys, admin seed credentials) is stored as Azure environment variables — nothing sensitive is committed to the repository.
+
+![System Architecture](docs/architecture-diagram.png)
+
+---
+
+## Database Design
+
+The schema is built around the `Appointments` entity, which links patients, doctors, clinics, and appointment categories.
+
+Key relationships:
+- A **Doctor** belongs to one **Clinic** and has one **Speciality**
+- A **Patient** can have multiple **Appointments**
+- Each **Appointment** records the **Doctor**, **Clinic**, **Category**, date, and duration
+- **Admin** accounts are stored in a dedicated **Users** table, separate from patients
+
+![ER Diagram](docs/er-diagram.png)
+
+---
+
+## Screenshots
+
+| Doctor Search | Booking Form |
+|---|---|
+| ![Doctor Search](docs/screenshots/doctor-search.png) | ![Booking Form](docs/screenshots/booking-form.png) |
+
+| Patient Dashboard | Admin Management |
+|---|---|
+| ![Patient Dashboard](docs/screenshots/patient-dashboard.png) | ![Admin Management](docs/screenshots/admin-management.png) |
+
+---
+
+## Quick Start
+
+### Prerequisites
+- .NET 9 SDK
+- Node.js 18+
+- MySQL Server
+
+### 1. Clone
 
 ```bash
 git clone https://github.com/ranjitwn/clinic-appointment-system.git
 cd clinic-appointment-system
 ```
 
-## 1. Prepare Local Database
+### 2. Database
 
-Ensure **MySQL Server** is installed (for example via MySQL Workbench).
-
-Create a local database:
+Create a local MySQL database:
 
 ```sql
 CREATE DATABASE clinicappointmentdb;
 ```
 
-Update the backend connection string for your local environment.
-
-Example in `appsettings.Development.json`:
+Add your connection string to `Backend/ClinicAppointment.API/appsettings.Development.json`:
 
 ```json
 {
   "ConnectionStrings": {
     "DefaultConnection": "server=localhost;port=3306;database=clinicappointmentdb;user=root;password=yourpassword"
+  },
+  "SeedAdmin": {
+    "Email": "admin@example.com",
+    "Password": "YourAdminPassword"
   }
 }
 ```
 
----
-
-## 2. Start Backend API
+### 3. Backend
 
 ```bash
 cd Backend/ClinicAppointment.API
@@ -89,21 +171,9 @@ dotnet ef database update
 dotnet run
 ```
 
-Backend runs on:
+Runs at `http://localhost:5108` — Swagger at `http://localhost:5108/doc`
 
-```
-http://localhost:5108
-```
-
-Swagger documentation:
-
-```
-http://localhost:5108/doc
-```
-
----
-
-## 3. Start Frontend
+### 4. Frontend
 
 ```bash
 cd Frontend
@@ -111,265 +181,52 @@ npm install
 npm run dev
 ```
 
-Frontend runs on:
-
-```
-http://localhost:5173
-```
-
-⚠️ Ensure the backend API is running before starting the frontend.
+Runs at `http://localhost:5173`
 
 ---
 
-# Application Screenshots
+## Testing
 
-### Doctor Search
+Unit tests cover the appointment service layer using EF Core InMemory — no external database required.
 
-![Doctor Search](docs/screenshots/doctor-search.png)
-
-### Appointment Booking
-
-![Booking Form](docs/screenshots/booking-form.png)
-
-### Patient Dashboard
-
-![Patient Dashboard](docs/screenshots/patient-dashboard.png)
-
-### Admin Management
-
-![Admin Management](docs/screenshots/admin-management.png)
-
----
-
-# System Architecture
-
-The system follows a layered architecture separating the client interface, backend application logic, and persistent data storage.
-
-**Client Layer**
-React + TypeScript web application running in the browser.
-
-**Application Layer**
-ASP.NET Core Web API handling business logic, authentication, and data validation.
-
-**Data Layer**
-Azure MySQL database accessed through Entity Framework Core using Code-First migrations.
-
-Communication between frontend and backend is performed through **HTTPS REST APIs with JSON responses**.
-
-![System Architecture](docs/architecture-diagram.png)
-
----
-
-# Database Design
-
-The relational database schema was designed using Entity Framework Core Code-First migrations and is hosted on Azure Database for MySQL.
-
-The system revolves around the **Appointments** entity which connects patients, doctors, clinics, and appointment categories. Supporting tables such as **Specialities** and **Clinics** provide structured medical data used by the application.
-
-Key relationships include:
-
-• A **Doctor** belongs to a **Clinic** and has a **Speciality**  
-• A **Patient** can create multiple **Appointments**  
-• Each **Appointment** is linked to a **Doctor**, **Clinic**, and **Category**  
-• **Categories** define the type of appointment (Check-up, Consultation, etc.)
-
-The following ER diagram shows the full database structure and relationships.
-
-![Database ER Diagram](docs/er-diagram.png)
-
----
-
-# Project Structure
-
-```
-Root
-│
-├── Backend
-│   └── ClinicAppointment.API
-│       └── README.md
-│
-├── Frontend
-│   └── README.md
-│
-└── mar25ft-ep2-ranjitwn.sln
-```
-
-Additional documentation:
-
-- Backend → Backend API documentation
-- Frontend → Frontend application documentation
-
----
-
-# Technologies Used
-
-## Backend
-
-- ASP.NET Core (.NET 9)
-- Entity Framework Core (Code-First)
-- MySQL Database
-- JWT Authentication
-- Role-Based Authorization
-- Swagger / OpenAPI
-- Global Exception Middleware
-
-## Frontend
-
-- React 18
-- TypeScript
-- Vite
-- React Router
-- Fetch API
-- ESLint with strict TypeScript configuration
-
-## Cloud & DevOps
-
-- Microsoft Azure App Service
-- Azure Static Web Apps
-- Azure Database for MySQL
-- GitHub Actions CI/CD
-- Custom domain configuration
-
----
-
-# Key Features
-
-- Patient registration and authentication using JWT
-- Guest appointment booking
-- Doctor search and filtering
-- Appointment scheduling with availability validation
-- Patient appointment management
-- Admin management of clinics, doctors, categories, and specialities
-- Secure REST API with role-based authorization
-- Global error handling middleware with structured logging
-- Cloud deployment on Microsoft Azure
-- Automated CI/CD pipeline with GitHub Actions
-
----
-
-# Running the Project Locally
-
-## Start Backend
-
-```bash
-cd Backend/ClinicAppointment.API
-dotnet restore
-dotnet ef database update
-dotnet run
-```
-
-Backend runs on:
-
-```
-http://localhost:5108
-```
-
-Swagger documentation:
-
-```
-http://localhost:5108/doc
-```
-
----
-
-## Start Frontend
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
-Frontend runs on:
-
-```
-http://localhost:5173
-```
-
----
-
-# Deployment Architecture
-
-The application is deployed on Microsoft Azure using a cloud architecture consisting of:
-
-**Frontend**
-Azure Static Web Apps hosting the React application.
-
-**Backend**
-Azure App Service hosting the ASP.NET Core Web API.
-
-**Database**
-Azure Database for MySQL.
-
-**DNS & Domain**
-Custom domain configuration using Namecheap DNS.
-
-![Deployment Architecture](docs/deployment-diagram.png)
-
----
-
-# CI/CD Pipeline
-
-Continuous deployment is implemented using GitHub Actions.
-
-The pipeline performs:
-
-- Build ASP.NET Core backend
-- Deploy backend to Azure App Service
-- Build React frontend
-- Deploy frontend to Azure Static Web Apps
-
-Deployment is triggered automatically when changes are pushed to the repository.
-
----
-
-# Automated Testing
-
-The backend includes automated unit tests to validate core business logic in the service layer.
-
-Testing is implemented using:
-
-- **xUnit testing framework**
-- **Entity Framework Core InMemory provider**
-- Isolated service-level tests without external dependencies
-
-This allows validation of scheduling rules and API logic without requiring a real database connection.
-
-Example tested components:
-
-```
-AppointmentService
-AuthService
-```
-
-Tests are executed automatically in the **CI/CD pipeline** to ensure application stability before deployment.
-
-Run tests locally:
+Tested scenarios include:
+- Doctor slot conflict (exact time, partial overlap, adjacent boundary)
+- Patient double-booking prevention
+- Auth service registration and login logic
 
 ```bash
 dotnet test
 ```
 
----
-
-# Configuration
-
-Sensitive configuration values such as database connection strings, JWT keys, and admin credentials are stored using **environment variables in Azure** rather than inside the repository.
-
-This ensures secure configuration management for production deployments.
+Tests run automatically in the CI/CD pipeline before each deployment.
 
 ---
 
-# Summary
+## CI/CD
 
-This project demonstrates:
+GitHub Actions deploys automatically on push to `main`:
 
-- Full-stack web application development
-- REST API design with ASP.NET Core
-- JWT authentication and role-based authorization
-- Entity Framework Core with MySQL
-- React + TypeScript frontend development
-- Cloud deployment on Microsoft Azure
-- CI/CD automation with GitHub Actions
-- Automated backend unit testing
-- Secure configuration using environment variables
+1. Build and test backend
+2. Deploy API to Azure App Service
+3. Build frontend
+4. Deploy to Azure Static Web Apps
+
+![Deployment Architecture](docs/deployment-diagram.png)
+
+---
+
+## Project Structure
+
+```
+clinic-appointment-system/
+├── Backend/
+│   └── ClinicAppointment.API/     # ASP.NET Core Web API
+│   └── ClinicAppointment.Tests/   # xUnit test project
+├── Frontend/                      # React + TypeScript (Vite)
+├── docs/                          # Diagrams and screenshots
+└── README.md
+```
+
+Detailed documentation:
+- [Backend README](Backend/ClinicAppointment.API/README.md)
+- [Frontend README](Frontend/README.md)

@@ -1,320 +1,169 @@
-# Clinic Appointment Frontend (React + TypeScript + Vite)
+# Frontend — React + TypeScript
 
-This project is the **frontend application for the Clinic Appointment Booking System**. It provides the user interface for patients and administrators and communicates with the **ASP.NET Core Web API backend**.
+React 18 + TypeScript frontend for the Clinic Appointment Booking System, built with Vite and deployed on Azure Static Web Apps.
 
-The system demonstrates a modern full‑stack architecture using **React, TypeScript, and Vite on the frontend**, combined with an **ASP.NET Core REST API and MySQL database on the backend**, deployed to **Microsoft Azure**.
+> For full project context, deployment details, and screenshots see the [root README](../README.md).
 
 ---
 
-# 1. Application Setup Instructions
+## Responsibilities
 
-1. Open terminal inside the frontend folder:
+- Patient registration, login, and session management
+- Guest and registered appointment booking with real-time slot selection
+- Patient appointment management (reschedule, cancel)
+- Debounced doctor search
+- Admin dashboard for managing clinics, doctors, categories, and specialities
+- Role-based route protection (`Patient`, `Admin`)
+- User-friendly error feedback across all API interactions
+
+---
+
+## Project Structure
+
+```
+src/
+├── pages/
+│   ├── HomePage/             # Booking form (guest + registered patient)
+│   ├── SearchDoctorPage/     # Debounced doctor search
+│   ├── MyAppointmentsPage/   # Appointment list + inline reschedule
+│   ├── AdminPage/            # Tabbed admin dashboard
+│   ├── LoginPage/
+│   └── RegisterPage/
+├── components/
+│   ├── appointments/         # AppointmentCard, AppointmentForm
+│   ├── auth/                 # AuthCard (shared login/register wrapper)
+│   ├── layout/               # Header, Footer, Layout
+│   ├── ui/                   # Spinner, EmptyState, Popup, Button
+│   └── DoctorCard/
+├── services/
+│   ├── apiHelpers.ts         # Shared fetch wrapper + error mapping
+│   ├── appointmentService.ts
+│   ├── authService.ts
+│   ├── doctorService.ts
+│   └── ...                   # One file per backend resource
+├── context/                  # AuthContext — token + role
+├── routes/                   # ProtectedRoute
+└── types/                    # TypeScript DTOs matching backend responses
+```
+
+---
+
+## Authentication and Routing
+
+Auth state (JWT token and role) is stored in `localStorage` and exposed application-wide via `AuthContext`. The context provides `login()` and `logout()` actions used across the login page, register page, and header nav.
+
+Route protection is handled by `ProtectedRoute`:
+
+```tsx
+<ProtectedRoute>            // requires any valid token
+<ProtectedRoute adminOnly>  // requires role === "Admin"
+```
+
+Unauthenticated users are redirected to `/login`. Non-admin users accessing `/admin` are redirected to `/`. Role checks use the value stored in context — no additional API call is made.
+
+---
+
+## API Communication
+
+All HTTP calls go through a shared `fetchJson` wrapper in `services/apiHelpers.ts` rather than calling `fetch` directly. It handles three failure cases that would otherwise surface raw browser errors to users:
+
+| Failure | Raw browser error | Message shown to user |
+|---|---|---|
+| Server unreachable / offline | `TypeError: Failed to fetch` | "Unable to connect. Please check your internet connection." |
+| Non-JSON response (502/504) | `SyntaxError: Unexpected token '<'` | Status-mapped message |
+| 401 with no body | Silent fallback string | "Your session has expired. Please log in again." |
+
+Each service file calls `fetchJson` and passes through the server's `message` field when the API returns one, falling back to `friendlyStatusError(status)` when it does not.
+
+The JWT token is attached via `getAuthHeaders()` in `authHeaders.ts`, which appends `Authorization: Bearer` only when a token is present in `localStorage`.
+
+---
+
+## State Management
+
+Local `useState` / `useEffect` — no global state library. Each page owns its loading, error, and data state.
+
+The only shared state is auth (token + role), managed through `AuthContext`.
+
+Popup/toast notifications are lifted to `App.tsx` and passed down as setter props (`setPopupMessage`, `setPopupType`, `setPopupConfirm`). Pages trigger them directly without needing to own the Popup component. The `popupConfirm` prop supports a confirm/cancel flow used for cancellations and deletions.
+
+---
+
+## UI and Design
+
+Custom CSS built on design tokens (CSS custom properties) — no CSS framework:
+
+```css
+--clr-primary:       #1565a8
+--clr-accent:        #0ea5a4
+--clr-bg:            #f0f4f8
+--clr-surface:       #ffffff
+--clr-danger:        #dc2626
+```
+
+Spacing, border-radius, and shadow values are defined as tokens in `index.css` and referenced consistently across all components.
+
+**Reusable UI components:**
+
+| Component | Purpose |
+|---|---|
+| `Spinner` | Full-page and inline loading states; `inline` prop for in-form use; `aria-label` for accessibility |
+| `EmptyState` | Consistent zero-data views with icon, title, and optional message |
+| `Popup` | Toast with success/error variants and optional confirm action (used for cancellations) |
+| `Button` | Primary and danger-outline variants |
+
+Every data-fetching view has both a loading state (`Spinner`) and an empty state (`EmptyState`) — doctor search, appointment list, admin appointment view, and slot selection.
+
+---
+
+## Pages
+
+**`HomePage` — Booking form**
+Cascading form: clinic → doctor → date → duration → available slot. Slots are fetched from the API whenever date or duration changes. Shows guest fields (name, email, date of birth) when the user is not logged in; hides them for authenticated patients.
+
+**`MyAppointmentsPage` — Patient appointments**
+Lists appointments for the logged-in patient. Each card has an inline reschedule form that expands in place — new slots are fetched on date or duration change. Cancel shows a confirm popup before the delete request is sent.
+
+**`SearchDoctorPage` — Doctor search**
+Input is debounced (400 ms) before triggering the search API call. Results render as doctor cards showing clinic and speciality badges. An empty state with a contextual message is shown when the query returns no results.
+
+**`AdminPage` — Admin dashboard**
+Tabbed layout: Appointments (filterable by clinic or doctor), Clinics, Doctors, Categories, Specialities. Each tab has inline add forms and per-item edit/delete with confirmation popups.
+
+---
+
+## Routes
+
+| Path | Access | Page |
+|---|---|---|
+| `/` | Public | Booking form |
+| `/search` | Public | Doctor search |
+| `/login` | Public | Login |
+| `/register` | Public | Register |
+| `/appointments` | Patient | Appointment management |
+| `/admin` | Admin | Admin dashboard |
+
+---
+
+## Running Locally
+
+**Prerequisites:** Node.js 18+, backend API running at `http://localhost:5108`
 
 ```bash
 cd Frontend
-```
-
-2. Install dependencies:
-
-```bash
 npm install
 ```
 
-3. Start development server:
-
-```bash
-npm run dev
-```
-
-4. The application will run on:
-
-```
-http://localhost:5173
-```
-
-⚠️ Ensure the **backend API is running** before starting the frontend.
-
----
-
-# 2. Environment Configuration
-
-The frontend uses an environment variable to define the backend API base URL.
-
-File:
-
-```
-.env.local
-```
-
-Example configuration for local development:
+Create a `.env.local` file:
 
 ```
 VITE_API_BASE_URL=http://localhost:5108
 ```
 
-This must match the running backend API URL.
-
-For production deployment, the variable should point to the deployed API endpoint.
-
----
-
-# 3. Technologies Used
-
-## Frontend Framework
-
-* React 18
-* TypeScript
-* Vite
-
-## Routing
-
-* React Router DOM
-
-## Backend Communication
-
-* Fetch API (REST API communication with ASP.NET Core backend)
-
-## Development Tooling
-
-* ESLint with strict TypeScript configuration
-* Vite build tooling
-* @vitejs/plugin-react for React Fast Refresh and JSX support
-
----
-
-# 4. Project Structure
-
-```
-Frontend/
-│
-├── src/
-│   ├── components/
-│   │   ├── appointments/
-│   │   │   ├── AppointmentCard.tsx
-│   │   │   └── AppointmentForm.tsx
-│   │   ├── auth/
-│   │   │   ├── AuthCard/
-│   │   │   │   └── index.tsx
-│   │   │   ├── LoginForm/
-│   │   │   │   └── index.tsx
-│   │   │   └── RegisterForm/
-│   │   │       └── index.tsx
-│   │   ├── Button/
-│   │   │   └── index.tsx
-│   │   ├── DoctorCard/
-│   │   │   └── index.tsx
-│   │   ├── layout/
-│   │   │   ├── Footer/
-│   │   │   │   └── index.tsx
-│   │   │   ├── Header/
-│   │   │   │   └── index.tsx
-│   │   │   └── Layout.tsx
-│   │   └── ui/
-│   │       └── Popup.tsx
-│   │
-│   ├── context/
-│   │   ├── AuthContext.tsx
-│   │   ├── AuthProvider.tsx
-│   │   └── useAuth.ts
-│   │
-│   ├── pages/
-│   │   ├── AdminPage/
-│   │   │   └── index.tsx
-│   │   ├── HomePage/
-│   │   │   └── index.tsx
-│   │   ├── LoginPage/
-│   │   │   └── index.tsx
-│   │   ├── MyAppointmentsPage/
-│   │   │   └── index.tsx
-│   │   ├── RegisterPage/
-│   │   │   └── index.tsx
-│   │   └── SearchDoctorPage/
-│   │       └── index.tsx
-│   │
-│   ├── routes/
-│   │   └── ProtectedRoute.tsx
-│   │
-│   ├── services/
-│   │   ├── api.ts
-│   │   ├── appointmentService.ts
-│   │   ├── authHeaders.ts
-│   │   ├── authService.ts
-│   │   ├── categoryService.ts
-│   │   ├── clinicService.ts
-│   │   ├── doctorService.ts
-│   │   └── specialityService.ts
-│   │
-│   ├── types/
-│   │   ├── AppointmentCreateDTO.ts
-│   │   ├── AppointmentDTO.ts
-│   │   ├── CategoryCreateDTO.ts
-│   │   ├── CategoryDTO.ts
-│   │   ├── ClinicCreateDTO.ts
-│   │   ├── ClinicDTO.ts
-│   │   ├── DoctorCreateDTO.ts
-│   │   ├── DoctorDTO.ts
-│   │   ├── DoctorSearchDTO.ts
-│   │   ├── PatientLoginDTO.ts
-│   │   ├── PatientRegisterDTO.ts
-│   │   ├── SpecialityCreateDTO.ts
-│   │   └── SpecialityDTO.ts
-│   │
-│   ├── App.css
-│   ├── App.tsx
-│   ├── index.css
-│   └── main.tsx
-│
-├── .env.local
-├── .gitignore
-├── eslint.config.js
-├── index.html
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.node.json
-├── vite.config.ts
-└── Readme.md
+```bash
+npm run dev
 ```
 
----
+Runs at `http://localhost:5173`
 
-# 5. Authentication Flow
-
-## Guest User
-
-* Can book appointments without creating an account.
-* Must provide personal details during booking.
-* Cannot manage appointments unless they later register using the same email.
-* If a guest later registers using the same email address, the existing guest record is upgraded to a registered patient and previous appointments become accessible.
-
-## Registered Patient
-
-* Can register and log in.
-* JWT token stored in localStorage.
-* Can view, update, and cancel their own appointments.
-
-## Admin User
-
-* Uses the same authentication system as patients.
-* Role‑based UI access is enabled.
-* Admin dashboard allows managing clinics, doctors, categories, specialities, and viewing appointments.
-
----
-
-# 6. Routing Overview
-
-Routes implemented:
-
-* `/` → Appointment booking page (default landing page)
-* `/search` → Doctor search
-* `/login` → Patient login
-* `/register` → Patient registration
-* `/appointments` → Patient appointment management (protected)
-* `/admin` → Admin dashboard (role protected)
-
-Protected routes use role‑based authorization derived from the stored JWT token.
-
----
-
-# 7. UI Layout
-
-Common layout components:
-
-* Header navigation displayed on all pages
-* Footer displaying the current year
-* Shared popup notification component
-* Reusable button components
-
-This ensures consistent UI across the application.
-
----
-
-# 8. Backend Communication
-
-All API communication is handled inside the `services` folder.
-
-Typical service responsibilities include:
-
-* Fetch clinics, doctors, and categories
-* Appointment booking and updates
-* Authentication requests
-* Admin CRUD operations
-
-Authorization headers are automatically included for protected endpoints.
-
----
-
-# 9. System Architecture
-
-The frontend communicates with the backend through REST API calls.
-
-```
-React Frontend
-      ↓
-API Services (Fetch)
-      ↓
-ASP.NET Core Controllers
-      ↓
-Service Layer
-      ↓
-Entity Framework Core
-      ↓
-MySQL Database
-```
-
-This separation keeps the frontend responsible for **user interaction and presentation**, while the backend handles **business logic, validation, authentication, and data persistence**.
-
----
-
-# 10. Validation & User Feedback
-
-Frontend validation includes:
-
-* Required field validation
-* Date of birth validation
-* Appointment time selection validation
-* Popup error and success messages
-
-Loading indicators are displayed during API calls.
-
----
-
-# 11. CORS Integration
-
-During development the backend allows requests from:
-
-```
-http://localhost:5173
-```
-
-This enables local frontend–backend communication.
-
----
-
-# 12. Security Notes
-
-* JWT tokens stored in localStorage for authentication.
-* No sensitive secrets stored in the frontend application.
-* API base URL managed through environment variables.
-
-For production deployments:
-
-* HTTPS must be enforced.
-* Secure environment variables should be configured.
-
----
-
-# 13. Summary
-
-This frontend application provides:
-
-* Clinic appointment booking interface
-* Guest and registered patient workflows
-* JWT‑based authentication UI
-* Role‑based admin dashboard
-* Doctor search functionality
-* Responsive UI with reusable components
-* Integration with the ASP.NET Core backend API
-
-Together with the backend API, the system demonstrates a **full‑stack clinic appointment booking platform built with ASP.NET Core, React, TypeScript, and MySQL and deployed to Microsoft Azure**.
+In production, `VITE_API_BASE_URL` is set to `https://api.ranjitnair.dev` via Azure Static Web Apps environment configuration.
