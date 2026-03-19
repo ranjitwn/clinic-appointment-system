@@ -236,6 +236,9 @@ All sensitive values are stored as Azure App Service environment variables in pr
 |---|---|
 | `ConnectionStrings__DefaultConnection` | MySQL connection string |
 | `JwtSettings__SecretKey` | JWT signing key |
+| `JwtSettings__Issuer` | JWT issuer claim |
+| `JwtSettings__Audience` | JWT audience claim |
+| `JwtSettings__ExpiryMinutes` | Token lifetime in minutes |
 | `SeedAdmin__Email` | Initial admin email |
 | `SeedAdmin__Password` | Initial admin password |
 

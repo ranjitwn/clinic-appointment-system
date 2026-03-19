@@ -15,7 +15,7 @@ The platform supports two user types — **patients** and **admins** — each wi
 
 Patients can register, search for doctors, book appointments with real-time slot availability, reschedule, and cancel. Guest booking is also supported without registration. Admins manage clinics, doctors, categories, and specialities through a dedicated dashboard.
 
-Originally developed as part of a backend development program, the project has since been extended with production-quality improvements across architecture, testing, security, error handling, and UI/UX.
+The project has been extended with production-quality improvements across architecture, testing, security, error handling, and UI/UX.
 
 ---
 
@@ -155,6 +155,12 @@ Add your connection string to `Backend/ClinicAppointment.API/appsettings.Develop
   "ConnectionStrings": {
     "DefaultConnection": "server=localhost;port=3306;database=clinicappointmentdb;user=root;password=yourpassword"
   },
+  "JwtSettings": {
+    "SecretKey": "your-secret-key-at-least-32-characters",
+    "Issuer": "ClinicAppointmentAPI",
+    "Audience": "ClinicAppointmentClient",
+    "ExpiryMinutes": 60
+  },
   "SeedAdmin": {
     "Email": "admin@example.com",
     "Password": "YourAdminPassword"
@@ -174,6 +180,12 @@ dotnet run
 Runs at `http://localhost:5108` — Swagger at `http://localhost:5108/doc`
 
 ### 4. Frontend
+
+Create `Frontend/.env.local`:
+
+```
+VITE_API_BASE_URL=http://localhost:5108
+```
 
 ```bash
 cd Frontend
